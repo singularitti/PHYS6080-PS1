@@ -1,0 +1,78 @@
+\ProvidesPackage{mystyle}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+\usepackage{fontspec}
+\usepackage{mathpazo}
+\usepackage{sourcesanspro}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{extract}
+\usepackage{fancyhdr}
+\usepackage{csquotes}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{eucal}
+\usepackage[hmargin=2cm,vmargin=2.5cm]{geometry}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{minted}
+% \usepackage{framed}
+\usepackage{textcomp}
+\usepackage{color}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{pdflscape}
+\usepackage[urlcolor=blue]{hyperref}
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage[english]{babel}
+\usepackage{biblatex}
+% \addbibresource{ref.bib}
+
+\graphicspath{{images/}}
+
+\setminted[python]{breaklines,framesep=2mm,fontsize=\footnotesize,numbersep=5pt}
+
+\pagestyle{fancy}
+\setlength\parindent{1cm}
+%\setlength\parskip{0.1in}
+\setlength\headheight{28pt}
+
+\lhead{\includegraphics[width=0.12\textwidth]{logo.png}}
+\chead{\textsc{G6080 Scientific Computing}}
+\rhead{\textsc{\userName}}
+\rfoot{\textsc{\thepage}}
+\cfoot{\textit{Last modified: \today}}
+\lfoot{\textsc{\institution}}
+
+\newcommand{\univlogo}{%
+  \noindent % University Logo
+  \begin{wrapfigure}{r}{0.15\textwidth}
+    \vspace{-80pt}
+    \begin{center}
+      \includegraphics[width=0.12\textwidth]{logo.png}
+    \end{center}
+    \vspace{-200pt}
+  \end{wrapfigure}
+}
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\ \par}
+\newcommand{\mysubparagraph}[1]{\subparagraph{#1}\mbox{}\\ \par}
+
+\newenvironment{bullets}{
+  \begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    }{\end{itemize}}
+\newenvironment{numlist}{
+  \begin{enumerate}
+    \setlength{\itemsep}{1pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    }{\end{enumerate}}

@@ -1,0 +1,66 @@
+\section{1}\label{sec:q1}
+
+In this example, we will look at the propagation of finite precision errors in
+multiplication. We start by truncating the input numbers to a fixed precision, given by
+ndig, and compare this to the result without truncating. To keep things relatively simple,
+we start from random numbers distributed uniformly between $0$ and $1$. We then shift these,
+to keep the result from getting either too large or too small.
+
+In the example code below, to round a floating point number, it is first decomposed by
+\texttt{math.frexp(x)} and the mantissa is rounded to a desired number of digits. Then the
+rounded mantissa is multipled by the exponent to give a rounded version of the floating
+point number.
+
+\begin{minted}[frame=single]{python}
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+
+#  The number of random numbers we will multiply together
+nrand = 10001
+
+#  The number of digits we truncate the operand to
+ndig = 6
+
+#  Start with x and multiply this by nrand random numbers
+x = np.random.rand()
+r = np.random.rand(nrand) + 0.542
+
+#  Find the rounded value for x, xr
+#  Need intermediate decomposition, xd
+xd = math.frexp(x)
+xr = round(xd[0],ndig) * 2**xd[1]
+
+#  xt is truncated value
+xt = float(int(x * 10**ndig)) * 10**-ndig
+
+print('n\t\t\t','Full\t\t\tRounded\t\t\tTruncated')
+print('0\t\t\t',x,'\t',xr,'\t\t',xt)
+
+for n in np.arange(nrand):
+
+    x = x * r[n]
+
+    #  Round random number and round result
+    rd = math.frexp(r[n])
+    xr = xr * round(rd[0],ndig) * 2**rd[1]
+    xrd = math.frexp(xr)
+    xr = round(xrd[0],ndig) * 2**xrd[1]
+
+    #  Truncate
+    xt = xt * float(int(r[n] * 10**ndig)) * 10**-ndig
+
+    if n in [ 10, 100, 1000, 10000, 100000 ]:
+        print('\n%d\tvalue\t\t%14.8e\t\t%14.8e\t\t%14.8e'% (n, x, xr ,xt))
+        print('\tfrac diff\t%3.1f\t\t\t%5.2e\t\t%5.2e' % (x/x, (x-xr)/x,(x-xt)/x))
+\end{minted}
+
+Notice how the deviation for the truncated case is growing $10$ times worse with every $10$
+times increase in floating point operations.
+
+For this problem, you should start from this code and adapt it to be run many times in a
+loop (hundreds of times). For each time through the loop, you should store the fractional
+differences for both rounding and truncation after $100$, $1000$ and $10000$ multiplications.
+Plot a histogram of the deviations for both cases and the three different numbers of
+multiplications. Plot the average difference versus the number of multiplies for both the
+rounding and truncation cases to see how it scales with the number of multiplies.
