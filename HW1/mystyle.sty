@@ -1,5 +1,8 @@
 \ProvidesPackage{mystyle}
 
+\usepackage{afterpage}
+\usepackage{setspace}
+\usepackage[export]{adjustbox}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.15}
 \usepackage{mathrsfs}
@@ -21,7 +24,6 @@
 \usepackage{eucal}
 \usepackage[hmargin=2cm,vmargin=2.5cm]{geometry}
 \usepackage{multirow}
-\usepackage{wrapfig}
 \usepackage{minted}
 % \usepackage{framed}
 \usepackage{textcomp}
@@ -39,28 +41,18 @@
 
 \setminted[python]{breaklines,framesep=2mm,fontsize=\footnotesize,numbersep=5pt}
 
+\definecolor{CUBlueDarkest}{RGB}{3,33,105}
+
 \pagestyle{fancy}
 \setlength\parindent{1cm}
 %\setlength\parskip{0.1in}
 \setlength\headheight{28pt}
-
-\lhead{\includegraphics[width=0.12\textwidth]{logo.png}}
-\chead{\textsc{G6080 Scientific Computing}}
-\rhead{\textsc{\userName}}
+\lhead{\textsc{PHYS6080 Scientific Computing}}
+\rhead{\textsc{\name}}
 \rfoot{\textsc{\thepage}}
-\cfoot{\textit{Last modified: \today}}
-\lfoot{\textsc{\institution}}
+\cfoot{\footnotesize\textit{Last modified: \today}}
+\lfoot{\footnotesize\textsc{\institution}}
 
-\newcommand{\univlogo}{%
-  \noindent % University Logo
-  \begin{wrapfigure}{r}{0.15\textwidth}
-    \vspace{-80pt}
-    \begin{center}
-      \includegraphics[width=0.12\textwidth]{logo.png}
-    \end{center}
-    \vspace{-200pt}
-  \end{wrapfigure}
-}
 \newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\ \par}
 \newcommand{\mysubparagraph}[1]{\subparagraph{#1}\mbox{}\\ \par}
 
