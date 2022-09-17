@@ -16,6 +16,7 @@
 \usepackage{fancyhdr}
 \usepackage{csquotes}
 \usepackage{caption}
+\usepackage{mathtools}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -64,6 +65,9 @@
 \newcommand\Answer{
   \medskip
   \noindent\textbf{Answer:}\\
+}
+\newcommand{\irow}[1]{% Inline row vector, See https://tex.stackexchange.com/a/200511/61591
+  \begin{bsmallmatrix}#1\end{bsmallmatrix}%
 }
 
 \newenvironment{bullets}{
