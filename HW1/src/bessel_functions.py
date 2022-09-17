@@ -1,7 +1,9 @@
-# Back recursion for modified Bessel fucntions
+# Back recursion for modified Bessel functions
 from decimal import Decimal
 
 import numpy as np
+
+__all__ = ['back_recursion', 'back_recursion_precise']
 
 
 def normalization_coeff(order):
@@ -34,7 +36,7 @@ def back_recursion(x, max_order, init=(1, 0)):
 
 
 def back_recursion_precise(x, max_order, init=(Decimal(1.0), Decimal(0.0))):
-    I = np.array(list(map(Decimal, orders)))
+    I = np.array(list(map(Decimal, orders(max_order))))
     I[-2:] = map(Decimal, init)
     for n in np.flip(orders(max_order))[2:]:  # Orders 28-1
         I[n - 1] = I[n + 1] + 2 * n / Decimal(x) * I[n]
