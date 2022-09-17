@@ -1,4 +1,4 @@
-import os
+import os.path as path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,11 +22,11 @@ plt.rcParams.update(params)
 
 
 def plotsdir():
-    return os.path.abspath("../images")
+    return path.abspath(path.join(path.dirname(__file__), "../images"))
 
 
 def figpath(figname):
-    return os.path.join(plotsdir(), figname)
+    return path.join(plotsdir(), figname)
 
 
 def prepare_data(x, max_order):
