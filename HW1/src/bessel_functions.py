@@ -2,8 +2,9 @@
 from decimal import Decimal
 
 import numpy as np
+from scipy import special
 
-__all__ = ['back_recursion', 'back_recursion_precise']
+__all__ = ['back_recursion', 'back_recursion_precise', 'errors', 'max_errors']
 
 
 def normalization_coeff(order):
@@ -41,3 +42,13 @@ def back_recursion_precise(x, max_order):
     for n in np.flip(orders(max_order))[2:]:  # Orders from `max_order-2` to 1
         I[n - 1] = I[n + 1] + 2 * n / Decimal(x) * I[n]
     return normalize(I)
+
+
+def errors(x, max_order, method=back_recursion):
+    I = method(x, max_order)
+    I_exact = np.array([special.iv(order - 1, x) for order in orders(max_order)])
+    return abs(I - I_exact)
+
+
+def max_errors(xrange, order_range, method):
+    return np.array([[errors(x, max_order, method).max() for x in xrange] for max_order in order_range])
