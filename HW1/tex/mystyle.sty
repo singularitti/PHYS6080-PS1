@@ -1,5 +1,7 @@
 \ProvidesPackage{mystyle}
 
+\usepackage[margin=1in]{geometry}
+\usepackage{datetime}
 \usepackage{fontspec}
 \usepackage{mathpazo}
 \usepackage{sourcesanspro}
@@ -7,7 +9,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{fancyhdr}
 \usepackage{caption}
-\usepackage{mathtools}  % For `bsmallmatrix`
+\usepackage{mathtools} % For `bsmallmatrix`
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -30,7 +32,7 @@
   frame=lines,
   % framesep=10pt,
   mathescape,
-  xleftmargin=18pt,% 1.5em for 12pt fontsize
+  xleftmargin=18pt, % 1.5em for 12pt fontsize
   xrightmargin=18pt,
 }
 
@@ -38,11 +40,10 @@
 
 \pagestyle{fancy}
 \setlength\headheight{24pt}
-\lhead{\textsc{\thetitle}}
-\rhead{\textsc{\theauthor}}
-\rfoot{\textsc{\thepage}}
-\cfoot{\footnotesize\textit{Last modified: \today}}
-\lfoot{\footnotesize\textsc{\institution}}
+\fancyhf{}
+\fancyhead[LE,RO]{\textsc{\thetitle}}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[LO,RE]{\footnotesize\textit{Last modified: \thedate}}
 
 % See https://tex.stackexchange.com/a/128349/61591
 \newcounter{question}
