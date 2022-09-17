@@ -4,7 +4,8 @@ from decimal import Decimal
 import numpy as np
 from scipy import special
 
-__all__ = ['back_recursion', 'back_recursion_precise', 'errors', 'max_errors']
+__all__ = ['back_recursion', 'back_recursion_precise',
+           'errors', 'max_errors', 'minimum_steps']
 
 
 def normalization_coeff(order):
@@ -52,3 +53,10 @@ def errors(x, max_order, method=back_recursion):
 
 def max_errors(xrange, order_range, method):
     return np.array([[errors(x, max_order, method).max() for x in xrange] for max_order in order_range])
+
+
+def minimum_steps(xrange, order_range, method):
+    error_matrix = max_errors(xrange, order_range, method)
+    for (i, row) in enumerate(error_matrix):
+        if all(row < 1e-6):
+            return order_range[i]
