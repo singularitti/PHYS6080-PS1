@@ -3,55 +3,104 @@
 Here you are to investigate back recursion to determine the modified Bessel function
 $I_n(x)$.
 
-The sample code below uses back recursion to calculate $I_n(x)$, denoted by \texttt{I} in
-the code. These values can be compared with the values determined by \texttt{scipy}, denoted by
-\texttt{I\_exact}. For $x$ in the range $1$ to $10$, how many back recursion steps are needed to
-determine $I_0(x)$ to $I_5(x)$ to $6$ decimal places of accuracy? The normalization of the
-$I$'s from back recursion is not included in the code below.
+\Question Write a program using back recursion to calculate $I_n(x)$.
+Their values can be compared with the values determined by SciPy.
+For $x$ in the range $1$ to $10$, how many back recursion steps are needed to
+determine $I_0(x)$ to $I_5(x)$ to $6$ decimal places of accuracy?
 
-This code also uses the \texttt{Decimal} module to allow you to do back recursion to many
+\Answer First, we need to write a little normalization program for the modified Bessel functions.
+Since the normalization rule is
+%
+\begin{equation}\label{eq:normalize}
+    1 = I_0(x) - 2 I_2(x) + 2 I_4(x) - 2 I_6(x) + \ldots
+\end{equation}
+%
+We need to write the following program.
+The \texttt{coeff} function calculates each coefficient of the
+modified Bessel functions: $\bm{c} = \irow{1 & 0 & -2 & 0 & 2 & -2 & 0 & 2 & \ldots}$.
+And in function \texttt{normalize} we divide each order of the modified Bessel function
+by a scaling factor, which is determined by the normalization rule $\eqref{eq:normalize}$.
+
+\begin{minted}{python}
+import numpy as np
+
+
+def coeff(i):
+    if i == 0:
+        return 1
+    elif i % 4 == 0:
+        return 2
+    elif i % 2 == 0:
+        return -2
+    else:
+        return 0
+
+
+def normalize(I):
+    coeffs = np.vectorize(coeff)(range(len(I)))
+    scaling_factor = np.dot(coeffs, I)  # Return $\sum_i \bm{c}_i \bm{I}_i(x)$
+    return I / scaling_factor  # Divide all values in $\bm{I}$ by the `scaling_factor`
+\end{minted}
+
+Now we can write our back recursion algorithm as below:
+
+\begin{minted}{python}
+def back_recursion(x, max_order, init=(1, 0)):
+    I = np.empty(max_order)  # Initialize an empty vector of size `max_order`
+    I[-2:] = init  # Set the last two values to `init`
+    for v in np.flip(orders)[2:]:  # Orders from `max_order-2` to 1
+        I[v - 1] = I[v + 1] + 2 * v / x * I[v]
+    return normalize(I)
+\end{minted}
+
+In function \texttt{back\_recursion}, we first initialize an empty vector \texttt{I} which
+will store the values of the modified Bessel functions of each order up to
+\texttt{max\_order} ($30$ in this example) at $x$, i.e., $I_n(x)$, where
+$n = 1, 2, \ldots, 30$.
+Then we set the last two values of \texttt{I} to be anything we want, $1$ and $0$ here,
+since $I_n(x)$ at fixed $x$ decreases with increasing $n$.
+And we work back to the first order using the recurrence relation:
+%
+\begin{equation}
+    I_{n + 1}(x) = -\frac{ 2 n }{ x } I_n(x) + I_{n - 1}(x).
+\end{equation}
+%
+At last, we normalize the series with normalization rule \eqref{eq:normalize}.
+
+
+\Question This code also uses the \texttt{Decimal} module to allow you to do back recursion to many
 decimal places of accuracy. Suppose for some reason you need the modified Bessel functions
 $I_0(x)$ to $I_5(x)$ accurate to $24$ decimal places for $x$ in the range $1$ to $10$. How
 many back recursion steps do you need to achieve this?
 
-\begin{minted}[frame=single]{python}
-# Back recursion for modified Bessel fucntions using decimal
+\begin{minted}{python}
+# Back recursion for modified Bessel fucntions
+from decimal import Decimal, getcontext
+
+import matplotlib.pyplot as plt
+import numpy as np
 from scipy import special
-from decimal import *
 
 getcontext().prec = 50
 
-ord = 30
+max_order = 30
+orders = range(1, max_order + 1)
 x = 5
-xd = Decimal(int(x))
 
-id = np.arange(Decimal("0.0"), Decimal(int(ord)), Decimal("1.0"))
-id[-1] = Decimal("1.0")
-id[-2] = Decimal("0.0")
 
-i = np.zeros(ord)
-iex = np.zeros(ord)
+def back_recursion(x, max_order, init=(1, 0)):
+    I = np.empty(max_order)
+    I[-2:] = init
+    for v in np.flip(orders)[2:]:  # Orders 28-1
+        I[v - 1] = I[v + 1] + 2 * v / x * I[v]
+    return normalize(I)
 
-i[ord - 1] = 1
-i[ord - 2] = 0
 
-iex[ord - 1] = special.iv(ord - 1, x)
-iex[ord - 2] = special.iv(ord - 2, x)
-
-for n in np.arange(ord - 2, 0, -1):
-
-    #  i[n+1] = -2 * n * i[n]/x + i[n-1]
-
-    i[n - 1] = i[n + 1] + 2 * n * i[n] / x
-    iex[n - 1] = special.iv(n - 1, x)
-
-for nd in np.arange(Decimal(int(ord - 2)), Decimal("0"), Decimal("-1")):
-
-    #  i[n+1] = -2 * n * i[n]/x + i[n-1]
-
-    n = int(nd)
-
-    id[n - 1] = id[n + 1] + Decimal("2") * nd * id[n] / xd
-
-plt.plot(np.divide(i[0:10], iex[0:10]))
+def back_recursion_precise(x, max_order, init=(Decimal(1.0), Decimal(0.0))):
+    orders = range(1, max_order + 1)
+    I = np.array(list(map(Decimal, orders)))
+    I[-2:] = map(Decimal, init)
+    for v in np.flip(orders)[2:]:  # Orders 28-1
+        I[v - 1] = I[v + 1] + 2 * v / Decimal(x) * I[v]
+    return normalize(I)
 \end{minted}
