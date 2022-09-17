@@ -2,7 +2,7 @@ import os
 
 import matplotlib.pyplot as plt
 
-__all__ = ['saveas']
+__all__ = ['figpath']
 
 params = {
     "legend.fontsize": "x-large",
@@ -17,9 +17,9 @@ params = {
 plt.rcParams.update(params)
 
 
-def imagedir():
+def plotsdir():
     return os.path.abspath("../images")
 
 
-def saveas(figname):
-    return os.path.join(imagedir(), figname)
+def figpath(figname):
+    return os.path.join(plotsdir(), figname)
