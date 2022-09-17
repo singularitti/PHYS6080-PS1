@@ -19,7 +19,6 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{indentfirst}
 \usepackage{graphicx}
 \usepackage{eucal}
 \usepackage[hmargin=2cm,vmargin=2.5cm]{geometry}
@@ -55,6 +54,17 @@
 
 \newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\ \par}
 \newcommand{\mysubparagraph}[1]{\subparagraph{#1}\mbox{}\\ \par}
+% See https://tex.stackexchange.com/a/128349/61591
+\newcounter{question}
+\newcommand\Question{
+  \medskip
+  \stepcounter{question}
+  \noindent\textbf{Question \thequestion:}
+}
+\newcommand\Answer{
+  \medskip
+  \noindent\textbf{Answer:}\\
+}
 
 \newenvironment{bullets}{
   \begin{itemize}
