@@ -6,7 +6,7 @@ from scipy import special
 
 from .bessel_functions import back_recursion, errors, max_errors
 
-__all__ = ['plot_raw', 'plot_errors', 'plot_mat_errors']
+__all__ = ["plot_exact", "plot_raw", "plot_errors", "plot_mat_errors"]
 
 params = {
     "legend.fontsize": "x-large",
@@ -36,6 +36,21 @@ def prepare_data(x, max_order):
     return my, exact
 
 
+def plot_exact(max_order):
+    orders = range(1, max_order + 1)
+    fig, ax = plt.subplots()
+    x = np.linspace(1, 10, 100)
+    for order in orders:
+        ax.plot(x, [special.iv(order, y) for y in x], label=r"$I_{{{}}}(x)$".format(order))
+    ax.set_xlim(1, 10)
+    ax.set_ylim(0)
+    ax.set_xlabel(r"$x$")
+    ax.set_ylabel(r"$I_n(x)$")
+    ax.legend(loc="best")
+    fig.savefig(figpath("q3_0.pdf"))
+    return fig, ax
+
+
 def plot_raw(x, max_order):
     orders = range(1, max_order + 1)
     my, exact = prepare_data(x, max_order)
@@ -54,7 +69,7 @@ def plot_errors(x, max_order):
     orders = range(1, max_order + 1)
     fig, ax = plt.subplots()
     ax.scatter(orders, errors(x, max_order, back_recursion))
-    ax.set_xlim((1, max_order))
+    ax.set_xlim(1, max_order)
     ax.set_xlabel(r"back recursion steps ($n$)")
     ax.set_ylabel(r"$\Delta = I_{n}(x=5) - I_{n,\textnormal{exact}}(x=5)$")
     fig.savefig(figpath("q3_2.pdf"))
