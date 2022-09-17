@@ -1,26 +1,10 @@
-# Back recursion for modified Bessel fucntions
-from decimal import getcontext
-
+# Back recursion for modified Bessel functions
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import special
 
-from src.back_recursion import back_recursion
-
-params = {
-    "legend.fontsize": "x-large",
-    "figure.figsize": (8, 5),
-    "axes.labelsize": "x-large",
-    "axes.titlesize": "x-large",
-    "xtick.labelsize": "x-large",
-    "ytick.labelsize": "x-large",
-    "figure.autolayout": True,
-    "text.usetex": True,
-}
-plt.rcParams.update(params)
-
-getcontext().prec = 50
-
+from src.bessel_functions import back_recursion
+from src.plotting import saveas
 
 if __name__ == "__main__":
     max_order = 30
@@ -36,11 +20,11 @@ if __name__ == "__main__":
     plt.xlabel(r"back recursion steps ($n$)")
     plt.ylabel(r"$I_{n}(x=5)$")
     plt.legend(loc="best")
-    plt.savefig("../images/q3_1.pdf")
+    plt.savefig(saveas("q3_1.pdf"))
 
     plt.figure()
     plt.scatter(orders, I - I_exact)
     plt.xlim((1, max_order))
     plt.xlabel(r"back recursion steps ($n$)")
     plt.ylabel(r"$\Delta = I_{n}(x=5) - I_{n,\textnormal{exact}}(x=5)$")
-    plt.savefig("../images/q3_2.pdf")
+    plt.savefig(saveas("q3_2.pdf"))
