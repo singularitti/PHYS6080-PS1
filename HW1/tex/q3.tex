@@ -8,51 +8,46 @@ Their values can be compared with the values determined by SciPy.
 For $x$ in the range $1$ to $10$, how many back recursion steps are needed to
 determine $I_0(x)$ to $I_5(x)$ to $6$ decimal places of accuracy?
 
-\Answer First, we need to write a little normalization program for the modified Bessel functions.
+\Answer First, we need to write a little program for the modified Bessel functions.
 Since the normalization rule is
 %
 \begin{equation}\label{eq:normalize}
-    1 = I_0(x) - 2 I_2(x) + 2 I_4(x) - 2 I_6(x) + \ldots
+    1 = I_0(x) - 2 I_2(x) + 2 I_4(x) - 2 I_6(x) + \ldots,
 \end{equation}
 %
-We need to write the following program.
+we need to write a little code, as shown in Snippet \ref{lst:normalize}.
 The \texttt{coeff} function calculates each coefficient of the
 modified Bessel functions: $\bm{c} = \irow{1 & 0 & -2 & 0 & 2 & -2 & 0 & 2 & \ldots}$.
 And in function \texttt{normalize} we divide each order of the modified Bessel function
 by a scaling factor, which is determined by the normalization rule $\eqref{eq:normalize}$.
 
-\begin{minted}{python}
-import numpy as np
+\begin{listing}[H]
+    \centering
+    \caption{Normalization algorithm for a series of modified Bessel functions.}
+    \label{lst:normalize}
+    \begin{pythoncode}
+        import numpy as np
 
 
-def coeff(i):
-    if i == 0:
-        return 1
-    elif i % 4 == 0:
-        return 2
-    elif i % 2 == 0:
-        return -2
-    else:
-        return 0
+        def coeff(i):
+            if i == 0:
+                return 1
+            elif i % 4 == 0:
+                return 2
+            elif i % 2 == 0:
+                return -2
+            else:
+                return 0
 
 
-def normalize(I):
-    coeffs = np.vectorize(coeff)(range(len(I)))
-    scaling_factor = np.dot(coeffs, I)  # Return $\sum_i \bm{c}_i \bm{I}_i(x)$
-    return I / scaling_factor  # Divide all values in $\bm{I}$ by the `scaling_factor`
-\end{minted}
+        def normalize(I):
+            coeffs = np.vectorize(coeff)(range(len(I)))
+            scaling_factor = np.dot(coeffs, I)  # Return $\sum_i \bm{c}_i \bm{I}_i(x)$
+            return I / scaling_factor  # Divide all values in $\bm{I}$ by the `scaling_factor`
+    \end{pythoncode}
+\end{listing}
 
-Now we can write our back recursion algorithm as below:
-
-\begin{minted}{python}
-def back_recursion(x, max_order, init=(1, 0)):
-    I = np.empty(max_order)  # Initialize an empty vector of size `max_order`
-    I[-2:] = init  # Set the last two values to `init`
-    for v in np.flip(orders)[2:]:  # Orders from `max_order-2` to 1
-        I[v - 1] = I[v + 1] + 2 * v / x * I[v]
-    return normalize(I)
-\end{minted}
-
+Now we can write our back recursion algorithm, as shown in Snippet \ref{lst:back_recursion}.
 In function \texttt{back\_recursion}, we first initialize an empty vector \texttt{I} which
 will store the values of the modified Bessel functions of each order up to
 \texttt{max\_order} ($30$ in this example) at $x$, i.e., $I_n(x)$, where
@@ -67,6 +62,19 @@ And we work back to the first order using the recurrence relation:
 %
 At last, we normalize the series with normalization rule \eqref{eq:normalize}.
 
+\begin{listing}
+    \centering
+    \caption{A naïve back recursion algorithm.}
+    \label{lst:back_recursion}
+    \begin{pythoncode}
+        def back_recursion(x, max_order, init=(1, 0)):
+            I = np.empty(max_order)  # Initialize an empty vector of size `max_order`
+            I[-2:] = init  # Set the last two values to `init`
+            for v in np.flip(orders)[2:]:  # Orders from `max_order-2` to 1
+                I[v - 1] = I[v + 1] + 2 * v / x * I[v]
+            return normalize(I)
+    \end{pythoncode}
+\end{listing}
 
 \Question This code also uses the \texttt{Decimal} module to allow you to do back recursion to many
 decimal places of accuracy. Suppose for some reason you need the modified Bessel functions
