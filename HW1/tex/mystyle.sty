@@ -8,12 +8,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{fancyhdr}
-\usepackage{caption}
 \usepackage{mathtools} % For `bsmallmatrix`
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{algorithm}
 \usepackage{minted}
 \usepackage{bm}
 \usepackage{color}
@@ -23,17 +23,15 @@
 
 \graphicspath{{../images/}}
 
-\BeforeBeginEnvironment{minted}{\begin{listing}[H]\centering}
-    \AfterEndEnvironment{minted}{\end{listing}}
-\setminted[python]{
+\newminted{python}{
   autogobble,
   breaklines,
+  escapeinside=||,
   fontsize=\footnotesize,
-  frame=lines,
+  framesep=3mm,
   mathescape,
-  xleftmargin=18pt, % 1.5em for 12pt fontsize
-  xrightmargin=18pt,
 }
+\renewcommand{\listingscaption}{Snippet}
 
 \definecolor{CUBlueDarkest}{RGB}{3,33,105}
 
