@@ -1,40 +1,22 @@
 \ProvidesPackage{mystyle}
 
-\usepackage{afterpage}
-\usepackage{setspace}
-\usepackage[export]{adjustbox}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.15}
-\usepackage{mathrsfs}
-\usetikzlibrary{arrows}
 \usepackage{fontspec}
 \usepackage{mathpazo}
 \usepackage{sourcesanspro}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{extract}
 \usepackage{fancyhdr}
-\usepackage{csquotes}
 \usepackage{caption}
-\usepackage{mathtools}
+\usepackage{mathtools}  % For `bsmallmatrix`
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\usepackage{eucal}
-\usepackage[hmargin=2cm,vmargin=2.5cm]{geometry}
-\usepackage{multirow}
 \usepackage{minted}
 \usepackage{bm}
-\usepackage{textcomp}
 \usepackage{color}
-\usepackage{booktabs}
-\usepackage{tikz}
-\usepackage{pdflscape}
-\usepackage[urlcolor=blue]{hyperref}
-\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage[urlcolor=CUBlueDarkest]{hyperref}
 \usepackage[english]{babel}
-\usepackage{biblatex}
 % \addbibresource{ref.bib}
 
 \graphicspath{{../images/}}
@@ -46,7 +28,7 @@
   breaklines,
   fontsize=\footnotesize,
   frame=lines,
-  framesep=10pt,
+  % framesep=10pt,
   mathescape,
   xleftmargin=18pt,% 1.5em for 12pt fontsize
   xrightmargin=18pt,
@@ -56,14 +38,12 @@
 
 \pagestyle{fancy}
 \setlength\headheight{24pt}
-\lhead{\textsc{PHYS6080 Scientific Computing}}
-\rhead{\textsc{\name}}
+\lhead{\textsc{\thetitle}}
+\rhead{\textsc{\theauthor}}
 \rfoot{\textsc{\thepage}}
 \cfoot{\footnotesize\textit{Last modified: \today}}
 \lfoot{\footnotesize\textsc{\institution}}
 
-\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\ \par}
-\newcommand{\mysubparagraph}[1]{\subparagraph{#1}\mbox{}\\ \par}
 % See https://tex.stackexchange.com/a/128349/61591
 \newcounter{question}
 \newcommand\Question{
@@ -76,18 +56,5 @@
   \noindent\textbf{Answer:}\\
 }
 \newcommand{\irow}[1]{% Inline row vector, See https://tex.stackexchange.com/a/200511/61591
-  \begin{bsmallmatrix}#1\end{bsmallmatrix}%
+  \begin{bsmallmatrix}#1\end{bsmallmatrix}
 }
-
-\newenvironment{bullets}{
-  \begin{itemize}
-    \setlength{\itemsep}{1pt}
-    \setlength{\parskip}{0pt}
-    \setlength{\parsep}{0pt}
-    }{\end{itemize}}
-\newenvironment{numlist}{
-  \begin{enumerate}
-    \setlength{\itemsep}{1pt}
-    \setlength{\parskip}{0pt}
-    \setlength{\parsep}{0pt}
-    }{\end{enumerate}}
