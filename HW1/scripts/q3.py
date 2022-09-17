@@ -30,9 +30,9 @@ def normalize(I):
 
 
 def back_recursion(x, max_order, init=(1, 0)):
-    I = np.empty(max_order)
-    I[-2:] = init
-    for v in np.flip(orders)[2:]:  # Orders 28-1
+    I = np.empty(max_order)  # Initialize a vector of size `max_order`
+    I[-2:] = init  # Set the last two values to `init`
+    for v in np.flip(orders)[2:]:  # Orders from `max_order-2` to 1
         I[v - 1] = I[v + 1] + 2 * v / x * I[v]
     return normalize(I)
 
