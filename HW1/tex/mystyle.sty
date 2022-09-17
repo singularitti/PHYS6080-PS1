@@ -39,14 +39,23 @@
 
 \graphicspath{{../images/}}
 
-\setminted[python]{breaklines,framesep=2mm,fontsize=\footnotesize,numbersep=5pt}
+\BeforeBeginEnvironment{minted}{\begin{listing}[H]\centering}
+    \AfterEndEnvironment{minted}{\end{listing}}
+\setminted[python]{
+  autogobble,
+  breaklines,
+  fontsize=\footnotesize,
+  frame=lines,
+  framesep=10pt,
+  mathescape,
+  xleftmargin=18pt,% 1.5em for 12pt fontsize
+  xrightmargin=18pt,
+}
 
 \definecolor{CUBlueDarkest}{RGB}{3,33,105}
 
 \pagestyle{fancy}
-\setlength\parindent{1cm}
-%\setlength\parskip{0.1in}
-\setlength\headheight{28pt}
+\setlength\headheight{24pt}
 \lhead{\textsc{PHYS6080 Scientific Computing}}
 \rhead{\textsc{\name}}
 \rfoot{\textsc{\thepage}}
