@@ -9,7 +9,7 @@ For $x$ in the range $1$ to $10$, how many back recursion steps are needed to
 determine $I_0(x)$ to $I_5(x)$ to $6$ decimal places of accuracy?
 
 \Answer First, we need to write a little program for the modified Bessel functions.
-Since the normalization rule is
+Since the \emph{normalizer} is
 %
 \begin{equation}\label{eq:normalize}
     1 = I_0(x) - 2 I_2(x) + 2 I_4(x) - 2 I_6(x) + \ldots,
@@ -19,7 +19,7 @@ we need to write a little code, as shown in Snippet \ref{lst:normalize}.
 The \texttt{coeff} function calculates each coefficient of the
 modified Bessel functions: $\bm{c} = \irow{1 & 0 & -2 & 0 & 2 & -2 & 0 & 2 & \ldots}$.
 And in function \texttt{normalize} we divide each order of the modified Bessel function
-by a scaling factor, which is determined by the normalization rule $\eqref{eq:normalize}$.
+by a scaling factor, which is determined by the normalizer \eqref{eq:normalize}.
 
 \begin{algorithm}
     \caption{Normalization algorithm for a series of modified Bessel functions.}
@@ -59,7 +59,7 @@ And we work back to the first order using the recurrence relation:
     I_{n + 1}(x) = -\frac{ 2 n }{ x } I_n(x) + I_{n - 1}(x).
 \end{equation}
 %
-At last, we normalize the series with normalization rule \eqref{eq:normalize}.
+At last, we normalize the series with normalizer \eqref{eq:normalize}.
 
 \begin{algorithm}
     \caption{A naïve back recursion algorithm.}
