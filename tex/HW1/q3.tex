@@ -21,8 +21,7 @@ modified Bessel functions: $\bm{c} = \irow{1 & 0 & -2 & 0 & 2 & -2 & 0 & 2 & \ld
 And in function \texttt{normalize} we divide each order of the modified Bessel function
 by a scaling factor, which is determined by the normalization rule $\eqref{eq:normalize}$.
 
-\begin{listing}[H]
-    \centering
+\begin{algorithm}
     \caption{Normalization algorithm for a series of modified Bessel functions.}
     \label{lst:normalize}
     \begin{pythoncode}
@@ -45,7 +44,7 @@ by a scaling factor, which is determined by the normalization rule $\eqref{eq:no
             scaling_factor = np.dot(coeffs, I)  # Return $\sum_i \bm{c}_i \bm{I}_i(x)$
             return I / scaling_factor  # Divide all values in $\bm{I}$ by the `scaling_factor`
     \end{pythoncode}
-\end{listing}
+\end{algorithm}
 
 Now we can write our back recursion algorithm, as shown in Snippet \ref{lst:back_recursion}.
 In function \texttt{back\_recursion}, we first initialize an empty vector \texttt{I} which
@@ -62,8 +61,7 @@ And we work back to the first order using the recurrence relation:
 %
 At last, we normalize the series with normalization rule \eqref{eq:normalize}.
 
-\begin{listing}
-    \centering
+\begin{algorithm}
     \caption{A naïve back recursion algorithm.}
     \label{lst:back_recursion}
     \begin{pythoncode}
@@ -74,7 +72,7 @@ At last, we normalize the series with normalization rule \eqref{eq:normalize}.
                 I[v - 1] = I[v + 1] + 2 * v / x * I[v]
             return normalize(I)
     \end{pythoncode}
-\end{listing}
+\end{algorithm}
 
 \Question This code also uses the \texttt{Decimal} module to allow you to do back recursion to many
 decimal places of accuracy. Suppose for some reason you need the modified Bessel functions
