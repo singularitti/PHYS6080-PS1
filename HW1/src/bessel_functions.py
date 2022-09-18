@@ -8,7 +8,7 @@ __all__ = ['back_recursion', 'back_recursion_precise',
            'errors', 'max_errors', 'minimum_steps']
 
 
-def normalization_coeff(order):
+def coeff(order):
     if order == 0:
         return 1
     elif order % 4 == 0:
@@ -20,9 +20,10 @@ def normalization_coeff(order):
 
 
 def normalize(bessel_functions):
-    coeffs = np.vectorize(normalization_coeff)(range(len(bessel_functions)))
+    coeffs = np.vectorize(coeff)(range(len(bessel_functions)))
+    # Calculate $s = \sum_i \bm{c}_i \bm{I}_i(x)$
     scaling_factor = np.dot(coeffs, bessel_functions)
-    return bessel_functions / scaling_factor
+    return bessel_functions / scaling_factor  # Divide all values in $\bm{I}$ by $s$
 
 
 def orders(max_order):
@@ -31,7 +32,7 @@ def orders(max_order):
 
 def back_recursion(x, max_order):
     I = np.empty(max_order)  # Initialize a vector of size `max_order`
-    I[-2:] = 1, 0  # Set the last two values to `init`
+    I[-2:] = 1, 0  # Set the last two values
     for n in np.flip(orders(max_order))[2:]:  # Orders from `max_order-2` to 1
         I[n - 1] = I[n + 1] + 2 * n / x * I[n]
     return normalize(I)
