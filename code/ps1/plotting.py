@@ -78,7 +78,7 @@ def plot_errors(x, last_order, figname="p3_2.pdf"):
     # See https://stackoverflow.com/a/34880501/3260253
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.set_xlabel(r"back recursion steps ($n$)")
-    ax.set_ylabel(f"$\Delta = I_{{n}}(x={x}) - I_{{n,\textnormal{{exact}}}}(x={x})$")
+    ax.set_ylabel(f"$\Delta = I_{{n}}(x={x}) - I_{{n,\\textnormal{{exact}}}}(x={x})$")
     fig.savefig(figpath(figname))
     return fig, ax
 
