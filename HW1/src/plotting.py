@@ -45,7 +45,7 @@ def plot_exact(max_order):
     fig, ax = plt.subplots()
     x = np.linspace(1, 10, 100)
     for order in orders:
-        ax.plot(x, [special.iv(order, y) for y in x], label=r"$I_{{{}}}(x)$".format(order))
+        ax.plot(x, [special.iv(order, y) for y in x], label=f"$I_{{{order}}}(x)$")
     ax.set_xlim(1, 10)
     ax.set_ylim(0)
     ax.set_xlabel(r"$x$")
@@ -63,7 +63,7 @@ def plot_raw(x, max_order):
     ax.scatter(orders, exact, label="Exact values by SciPy")
     ax.set_xlim((1, max_order))
     ax.set_xlabel(r"back recursion steps ($n$)")
-    ax.set_ylabel(r"$I_{n}(x=5)$")
+    ax.set_ylabel(f"$I_{{n}}(x={x})$")
     ax.legend(loc="best")
     fig.savefig(figpath("q3_1.pdf"))
     return fig, ax
@@ -75,7 +75,7 @@ def plot_errors(x, max_order):
     ax.scatter(orders, errors(x, max_order, back_recursion))
     ax.set_xlim(1, max_order)
     ax.set_xlabel(r"back recursion steps ($n$)")
-    ax.set_ylabel(r"$\Delta = I_{n}(x=5) - I_{n,\textnormal{exact}}(x=5)$")
+    ax.set_ylabel(f"$\Delta = I_{{n}}(x={x}) - I_{{n,\textnormal{{exact}}}}(x={x})$")
     fig.savefig(figpath("q3_2.pdf"))
     return fig, ax
 
