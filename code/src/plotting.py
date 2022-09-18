@@ -74,9 +74,11 @@ def plot_errors(x, max_order):
     fig, ax = plt.subplots()
     ax.scatter(orders, errors(x, max_order, back_recursion))
     ax.set_xlim(1, max_order)
+    ax.set_xticks(orders)
     ax.set_xlabel(r"back recursion steps ($n$)")
     ax.set_ylabel(f"$\Delta = I_{{n}}(x={x}) - I_{{n,\textnormal{{exact}}}}(x={x})$")
-    fig.savefig(figpath("q3_2.pdf"))
+    plt.show()
+    # fig.savefig(figpath("q3_2.pdf"))
     return fig, ax
 
 
