@@ -1,6 +1,7 @@
 import os
 from os.path import abspath, dirname, exists, join
 
+import imageio
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import MaxNLocator
@@ -8,23 +9,24 @@ from scipy import special
 
 from .bessel_functions import back_recursion, errors, max_errors
 
-__all__ = ["plot_exact", "plot_raw", "plot_errors", "plot_mat_errors"]
+__all__ = ["plot_exact", "plot_raw", "plot_errors", "save_plots_gif", "plot_mat_errors"]
 
 params = {
-    "legend.fontsize": "x-large",
     "figure.figsize": (8, 5),
+    "figure.autolayout": True,
+    "figure.dpi": 300,
     "axes.labelsize": "x-large",
     "axes.titlesize": "x-large",
     "xtick.labelsize": "x-large",
     "ytick.labelsize": "x-large",
-    "figure.autolayout": True,
+    "legend.fontsize": "x-large",
     "text.usetex": True,
 }
 plt.rcParams.update(params)
 
 
 def plotsdir():
-    path = abspath(join(dirname(__file__), "..", "..", "..", "tex", "ps1", "plots"))
+    path = abspath(join(dirname(__file__), "..", "..", "tex", "ps1", "plots"))
     if not exists(path):
         os.makedirs(path)
     return path
@@ -69,7 +71,7 @@ def plot_raw(x, last_order):
     return fig, ax
 
 
-def plot_errors(x, last_order):
+def plot_errors(x, last_order, figname="p3_2.pdf"):
     fig, ax = plt.subplots()
     ax.scatter(range(last_order + 1), errors(x, last_order, back_recursion))
     ax.set_xlim(0, last_order)
@@ -77,9 +79,20 @@ def plot_errors(x, last_order):
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.set_xlabel(r"back recursion steps ($n$)")
     ax.set_ylabel(f"$\Delta = I_{{n}}(x={x}) - I_{{n,\textnormal{{exact}}}}(x={x})$")
-    plt.show()
-    # fig.savefig(figpath("q3_2.pdf"))
+    fig.savefig(figpath(figname))
     return fig, ax
+
+
+def save_plots_gif(x, ys, figname="errors.gif"):
+    filenames = []
+    for y in ys:
+        filename = f"p3_{x}_{y}.png"
+        filenames.append(filename)
+        plot_errors(x, y, filename)
+    with imageio.get_writer(figpath(figname), mode="I") as writer:
+        for filename in filenames:
+            image = imageio.imread(figpath(filename))
+            writer.append_data(image)
 
 
 def plot_mat_errors(method):
