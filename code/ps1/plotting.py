@@ -1,8 +1,9 @@
 import os
-from os.path import abspath, join, dirname, exists
+from os.path import abspath, dirname, exists, join
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import MaxNLocator
 from scipy import special
 
 from .bessel_functions import back_recursion, errors, max_errors
@@ -74,7 +75,8 @@ def plot_errors(x, max_order):
     fig, ax = plt.subplots()
     ax.scatter(orders, errors(x, max_order, back_recursion))
     ax.set_xlim(1, max_order)
-    ax.set_xticks(orders)
+    # See https://stackoverflow.com/a/34880501/3260253
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.set_xlabel(r"back recursion steps ($n$)")
     ax.set_ylabel(f"$\Delta = I_{{n}}(x={x}) - I_{{n,\textnormal{{exact}}}}(x={x})$")
     plt.show()
