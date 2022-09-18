@@ -1,4 +1,5 @@
-import os.path as path
+import os
+from os.path import abspath, join, dirname, exists
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,11 +23,14 @@ plt.rcParams.update(params)
 
 
 def plotsdir():
-    return path.abspath(path.join(path.dirname(__file__), "../images"))
+    path = abspath(join(dirname(__file__), "../plots"))
+    if not exists(path):
+        os.makedirs(path)
+    return path
 
 
 def figpath(figname):
-    return path.join(plotsdir(), figname)
+    return join(plotsdir(), figname)
 
 
 def prepare_data(x, max_order):
