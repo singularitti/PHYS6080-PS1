@@ -65,11 +65,12 @@ At last, we normalize the series with normalizer \eqref{eq:normalize}.
     \caption{A naïve back recursion algorithm.}
     \label{lst:back_recursion}
     \begin{pythoncode}
-        def back_recursion(x, max_order, init=(1, 0)):
-            I = np.empty(max_order)  # Initialize an empty vector of size `max_order`
-            I[-2:] = init  # Set the last two values to `init`
-            for v in np.flip(orders)[2:]:  # Orders from `max_order-2` to 1
-                I[v - 1] = I[v + 1] + 2 * v / x * I[v]
+        def back_recursion(x, last_order):
+            orders = range(last_order + 1)
+            I = np.empty(last_order + 1)  # Orders from 0 to `last_order`
+            I[-2:] = 1, 0  # Set the last two values
+            for n in np.flip(orders)[2:]:  # Orders from `last_order-2` to 0
+                I[n] = I[n + 2] + 2 * (n + 1) / x * I[n + 1]
             return normalize(I)
     \end{pythoncode}
 \end{algorithm}
@@ -80,33 +81,11 @@ $I_0(x)$ to $I_5(x)$ accurate to $24$ decimal places for $x$ in the range $1$ to
 many back recursion steps do you need to achieve this?
 
 \begin{minted}{python}
-# Back recursion for modified Bessel fucntions
-from decimal import Decimal, getcontext
-
-import matplotlib.pyplot as plt
-import numpy as np
-from scipy import special
-
-getcontext().prec = 50
-
-max_order = 30
-orders = range(1, max_order + 1)
-x = 5
-
-
-def back_recursion(x, max_order, init=(1, 0)):
-    I = np.empty(max_order)
-    I[-2:] = init
-    for v in np.flip(orders)[2:]:  # Orders 28-1
-        I[v - 1] = I[v + 1] + 2 * v / x * I[v]
-    return normalize(I)
-
-
-def back_recursion_precise(x, max_order, init=(Decimal(1.0), Decimal(0.0))):
-    orders = range(1, max_order + 1)
-    I = np.array(list(map(Decimal, orders)))
-    I[-2:] = map(Decimal, init)
-    for v in np.flip(orders)[2:]:  # Orders 28-1
-        I[v - 1] = I[v + 1] + 2 * v / Decimal(x) * I[v]
+def back_recursion_precise(x, last_order):
+    orders = range(last_order + 1)
+    I = np.fromiter(map(Decimal, orders), Decimal)
+    I[-2:] = Decimal(1), Decimal(0)
+    for n in np.flip(orders)[2:]:  # Orders from `last_order-2` to 0
+        I[n] = I[n + 2] + 2 * (n + 1) / Decimal(x) * I[n + 1]
     return normalize(I)
 \end{minted}
