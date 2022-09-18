@@ -34,15 +34,15 @@ def figpath(figname):
     return join(plotsdir(), figname)
 
 
-def prepare_data(x, max_order):
-    orders = range(1, max_order + 1)
-    my = back_recursion(x, max_order)
-    exact = np.array([special.iv(order - 1, x) for order in orders])
+def prepare_data(x, last_order):
+    orders = range(last_order + 1)
+    my = back_recursion(x, last_order)
+    exact = np.array([special.iv(order, x) for order in orders])
     return my, exact
 
 
-def plot_exact(max_order):
-    orders = range(1, max_order + 1)
+def plot_exact(last_order):
+    orders = range(last_order + 1)
     fig, ax = plt.subplots()
     x = np.linspace(1, 10, 100)
     for order in orders:
@@ -56,13 +56,12 @@ def plot_exact(max_order):
     return fig, ax
 
 
-def plot_raw(x, max_order):
-    orders = range(1, max_order + 1)
-    my, exact = prepare_data(x, max_order)
+def plot_raw(x, last_order):
+    my, exact = prepare_data(x, last_order)
     fig, ax = plt.subplots()
-    ax.scatter(orders, my, label="A naïve algorithm")
-    ax.scatter(orders, exact, label="Exact values by SciPy")
-    ax.set_xlim((1, max_order))
+    ax.scatter(range(len(my)), my, label="A naïve algorithm")
+    ax.scatter(range(len(exact)), exact, label="Exact values by SciPy")
+    ax.set_xlim(0, last_order)
     ax.set_xlabel(r"back recursion steps ($n$)")
     ax.set_ylabel(f"$I_{{n}}(x={x})$")
     ax.legend(loc="best")
@@ -70,11 +69,10 @@ def plot_raw(x, max_order):
     return fig, ax
 
 
-def plot_errors(x, max_order):
-    orders = range(1, max_order + 1)
+def plot_errors(x, last_order):
     fig, ax = plt.subplots()
-    ax.scatter(orders, errors(x, max_order, back_recursion))
-    ax.set_xlim(1, max_order)
+    ax.scatter(range(last_order + 1), errors(x, last_order, back_recursion))
+    ax.set_xlim(0, last_order)
     # See https://stackoverflow.com/a/34880501/3260253
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.set_xlabel(r"back recursion steps ($n$)")
