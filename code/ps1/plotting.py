@@ -89,7 +89,7 @@ def save_plots_gif(x, ys, figname="errors.gif"):
         filename = f"p3_{x}_{y}.png"
         filenames.append(filename)
         plot_errors(x, y, filename)
-    with imageio.get_writer(figpath(figname), mode="I") as writer:
+    with imageio.get_writer(figpath(figname), mode="I", fps=5) as writer:
         for filename in filenames:
             image = imageio.imread(figpath(filename))
             writer.append_data(image)
