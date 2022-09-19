@@ -1,17 +1,17 @@
 \section{Problem \thesection}
 
 In the sample codes below, two different timing methods are shown. The first uses the
-\texttt{timeit} module method \texttt{timeit} to time a single statement (denoted by
-\texttt{stmt}). The statement is repeated \texttt{n} times to get the average time per call.
+\code{timeit} module method \code{timeit} to time a single statement (denoted by
+\code{stmt}). The statement is repeated \code{n} times to get the average time per call.
 
 The second uses two calls to the default timer to record the start and stop time for code
 enclosed between these calls. Note that the arrays are created outside of the numeric
 calculation. The numpy arrays used here are generally optimized for better numerical
 performance than regular Python arrays or lists. Time a few different statements inside the
-timer calls. How do the times here, using \texttt{numpy}, compare with the times for single
-statments using \texttt{timeit}?
+timer calls. How do the times here, using \code{numpy}, compare with the times for single
+statments using \code{timeit}?
 
-Now use the \texttt{timeit.default\_timer()} calls to time the loop over random number
+Now use the \code{timeit.default\_timer()} calls to time the loop over random number
 multiplications in Problem \ref{sec:p1}. Time the multiplication loop using standard
 floating point numbers, the loop using truncation and the loop using rounding separately to
 measure how much longer it takes to do the various additional operations in the truncation
