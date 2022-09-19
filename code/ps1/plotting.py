@@ -64,7 +64,7 @@ def plot_raw(x, last_order):
     ax.scatter(range(len(my)), my, label="A naïve algorithm")
     ax.scatter(range(len(exact)), exact, label="Exact values by SciPy")
     ax.set_xlim(0, last_order)
-    ax.set_xlabel(r"back recursion steps ($n$)")
+    ax.set_xlabel("Order of the modified Bessel function ($n$)")
     ax.set_ylabel(f"$I_{{n}}(x={x})$")
     ax.legend(loc="best")
     fig.savefig(figpath("q3_1.pdf"))
@@ -77,7 +77,7 @@ def plot_errors(x, last_order, figname="p3_2.pdf"):
     ax.set_xlim(0, last_order)
     # See https://stackoverflow.com/a/34880501/3260253
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    ax.set_xlabel(r"back recursion steps ($n$)")
+    ax.set_xlabel("Order of the modified Bessel function ($n$)")
     ax.set_ylabel(f"$\Delta = I_{{n}}(x={x}) - I_{{n,\\textnormal{{exact}}}}(x={x})$")
     fig.savefig(figpath(figname))
     return fig, ax
