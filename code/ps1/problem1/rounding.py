@@ -3,7 +3,7 @@
 # a fixed number of digits and when products are rounded to a fixed
 # number of digits.
 import math
-from functools import partial, reduce
+from functools import reduce
 from operator import mul
 
 import numpy as np
@@ -22,23 +22,22 @@ def truncate(x, ndigits):
     return int(x * 10 ** ndigits) * 10 ** (-ndigits)
 
 
-def rounded_mul(x, y, ndigits):
-    x, y = myround(x, ndigits), myround(y, ndigits)
-    return x * y
+def rounded_mul(ndigits):
+    return lambda x, y: myround(x, ndigits) * myround(y, ndigits)
 
 
-def truncated_mul(x, y, ndigits):
-    return x * truncate(y, ndigits)
+def truncated_mul(ndigits):
+    return lambda x, y: x * truncate(y, ndigits)
 
 
-def rounded_accumulate(ys, ndigits, initial):
-    func = partial(rounded_mul, ndigits=ndigits)
-    return reduce(func, ys, initial)
+def rounded_accumulate(ndigits):
+    func = rounded_mul(ndigits)
+    return lambda ys, initial: reduce(func, ys, initial)
 
 
-def truncated_accumulate(ys, ndigits, initial):
-    func = partial(truncated_mul, ndigits=ndigits)
-    return reduce(func, ys, truncate(initial, ndigits))
+def truncated_accumulate(ndigits):
+    func = truncated_mul(ndigits)
+    return lambda ys, initial: reduce(func, ys, truncate(initial, ndigits))
 
 
 def sampling(ndigits, times):
@@ -54,8 +53,8 @@ def sampling(ndigits, times):
         df = pd.concat([df, new1], ignore_index=True)
         for n in (10, 100, 1000, 10000):
             a = reduce(mul, ys[:n], x)
-            b = rounded_accumulate(ys[:n], ndigits, x)
-            c = truncated_accumulate(ys[:n], ndigits, truncate(x, ndigits))
+            b = rounded_accumulate(ndigits)(ys[:n], x)
+            c = truncated_accumulate(ndigits)(ys[:n], truncate(x, ndigits))
             diff = 1 - [a, b, c] / a
             new = pd.DataFrame(
                 data=[[n, "value", a, b, c, time], [n, "frac diff", *diff, time]],
