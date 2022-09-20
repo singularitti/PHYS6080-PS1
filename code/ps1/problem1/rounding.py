@@ -45,6 +45,7 @@ def sampling(times):
     df = pd.DataFrame(columns=colnames)
 
     def sampler(ndigits):
+        nonlocal df
         for time in range(1, times + 1):
             x = np.random.rand()
             ys = np.random.rand(10000) + 0.542
