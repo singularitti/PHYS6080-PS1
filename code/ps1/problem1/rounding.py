@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 __all__ = ["myround", "truncate", "rounded_mul", "truncated_mul", "rounded_accumulate",
-           "truncated_accumulate", "sampling"]
+           "truncated_accumulate", "sampling", "averages"]
 
 
 def myround(x, ndigits):
@@ -67,6 +67,19 @@ def sampling(times):
         return df
 
     return sampler
+
+
+def averages(data):
+    colnames = ["n", "type", "rounded", "truncated"]
+    df = pd.DataFrame(columns=colnames)
+    for n, group in data.groupby('n'):
+        for t, g in group.groupby('type'):
+            new = pd.DataFrame(
+                [n, t, g["rounded"].mean(), g["truncated"].mean()],
+                columns=colnames
+            )
+            pd.concat([df, new])
+    return df
 
 
 if __name__ == "__main__":
