@@ -83,6 +83,23 @@ def plot_errors(x, last_order, figname="p3_2.pdf"):
     return fig, ax
 
 
+def plot_errors_inone(x, last_order, figname="p3_2.pdf"):
+    fig, ax = plt.subplots()
+    hsv = plt.get_cmap('hsv')
+    for order in range(last_order, 3, -1):
+        ax.scatter(range(order + 1), errors(x, order, back_recursion),
+                   color =hsv(order / last_order),
+                   label=f"start from order {order}")
+    ax.set_xlim(0, last_order)
+    # See https://stackoverflow.com/a/34880501/3260253
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.set_xlabel("Order of the modified Bessel function ($n$)")
+    ax.set_ylabel(f"$\Delta = I_{{n}}(x={x}) - I_{{n,\\textnormal{{exact}}}}(x={x})$")
+    ax.legend(loc="upper right", ncol=4, fontsize=9)
+    fig.savefig(figpath(str(x) + figname))
+    return fig, ax
+
+
 def save_plots_gif(x, ys, figname="errors.gif"):
     filenames = []
     for y in ys:
