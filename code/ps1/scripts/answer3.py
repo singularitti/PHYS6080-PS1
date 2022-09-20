@@ -1,6 +1,7 @@
 # Back recursion for modified Bessel functions
-from ps1.bessel_functions import back_recursion
-from ps1.plotting import plot_exact, plot_errors, save_plots_gif, plot_mat_errors, plot_raw
+from problem3.bessel_functions import back_recursion
+from problem3.plotting import (plot_errors, plot_exact, plot_mat_errors,
+                               plot_raw, save_plots_gif)
 
 
 def main(x, max_order):

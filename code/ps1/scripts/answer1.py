@@ -7,7 +7,7 @@ from operator import mul
 
 import numpy as np
 import pandas as pd
-from ps1.rounding import myround, rounded_mul, truncate, truncated_mul
+from problem1.rounding import myround, rounded_mul, truncate, truncated_mul
 
 if __name__ == "__main__":
     ndigits = 6  # The number of digits we truncate the operand to
