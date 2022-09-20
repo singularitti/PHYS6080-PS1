@@ -47,9 +47,9 @@ by a scaling factor, which is determined by the normalizer \eqref{eq:normalize}.
 \end{algorithm}
 
 Now we can write our back recursion algorithm, as shown in Snippet \ref{lst:back_recursion}.
-In function \code{back\_recursion}, we first initialize an empty vector \code{I} which
+In function \code{back_recursion}, we first initialize an empty vector \code{I} which
 will store the values of the modified Bessel functions of each order up to
-\code{max\_order} ($30$ in this example) at $x$, i.e., $I_n(x)$, where
+\code{max_order} ($30$ in this example) at $x$, i.e., $I_n(x)$, where
 $n = 1, 2, \ldots, 30$.
 Then we set the last two values of \code{I} to be anything we want, $1$ and $0$ here,
 since $I_n(x)$ at fixed $x$ decreases with increasing $n$.
