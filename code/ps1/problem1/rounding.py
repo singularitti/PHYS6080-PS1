@@ -64,8 +64,7 @@ def sampling(times):
                     columns=colnames,
                 )
                 df = pd.concat([df, new], ignore_index=True)
-        df = df.set_index(["n", "type"])
-        return df
+        return df.set_index(["n", "type"])
 
     return sampler
 
@@ -76,11 +75,11 @@ def averages(data):
     for n, group in data.groupby('n'):
         for t, g in group.groupby('type'):
             new = pd.DataFrame(
-                [n, t, g["rounded"].mean(), g["truncated"].mean()],
+                [[n, t, g["rounded"].mean(), g["truncated"].mean()]],
                 columns=colnames
             )
-            pd.concat([df, new])
-    return df
+            df = pd.concat([df, new])
+    return df.set_index(["n", "type"])
 
 
 if __name__ == "__main__":
