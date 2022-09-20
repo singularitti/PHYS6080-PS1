@@ -24,3 +24,13 @@ def rounded_mul(x, y, ndigits):
 
 def truncated_mul(x, y, ndigits):
     return x * truncate(y, ndigits)
+
+
+def rounded_accumulate(ys, ndigits, initial):
+    func = partial(rounded_mul, ndigits=ndigits)
+    return reduce(func, ys, initial)
+
+
+def truncated_accumulate(ys, ndigits, initial):
+    func = partial(truncated_mul, ndigits=ndigits)
+    return reduce(func, ys, truncate(initial, ndigits))
