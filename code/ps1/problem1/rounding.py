@@ -40,31 +40,35 @@ def truncated_accumulate(ndigits):
     return lambda ys, initial: reduce(func, ys, truncate(initial, ndigits))
 
 
-def sampling(ndigits, times):
+def sampling(times):
     colnames = ["n", "type", "full", "rounded", "truncated", "times"]
     df = pd.DataFrame(columns=colnames)
-    for time in range(1, times + 1):
-        x = np.random.rand()
-        ys = np.random.rand(10000) + 0.542
-        new1 = pd.DataFrame(
-            data=[[0, "value", x, myround(x, ndigits), truncate(x, ndigits), time]],
-            columns=colnames,
-        )
-        df = pd.concat([df, new1], ignore_index=True)
-        for n in (10, 100, 1000, 10000):
-            a = reduce(mul, ys[:n], x)
-            b = rounded_accumulate(ndigits)(ys[:n], x)
-            c = truncated_accumulate(ndigits)(ys[:n], truncate(x, ndigits))
-            diff = 1 - [a, b, c] / a
-            new = pd.DataFrame(
-                data=[[n, "value", a, b, c, time], [n, "frac diff", *diff, time]],
+
+    def sampler(ndigits):
+        for time in range(1, times + 1):
+            x = np.random.rand()
+            ys = np.random.rand(10000) + 0.542
+            new1 = pd.DataFrame(
+                data=[[0, "value", x, myround(x, ndigits), truncate(x, ndigits), time]],
                 columns=colnames,
             )
-            df = pd.concat([df, new], ignore_index=True)
-    df = df.set_index(["n", "type"])
-    return df
+            df = pd.concat([df, new1], ignore_index=True)
+            for n in (10, 100, 1000, 10000):
+                a = reduce(mul, ys[:n], x)
+                b = rounded_accumulate(ndigits)(ys[:n], x)
+                c = truncated_accumulate(ndigits)(ys[:n], truncate(x, ndigits))
+                diff = 1 - [a, b, c] / a
+                new = pd.DataFrame(
+                    data=[[n, "value", a, b, c, time], [n, "frac diff", *diff, time]],
+                    columns=colnames,
+                )
+                df = pd.concat([df, new], ignore_index=True)
+        df = df.set_index(["n", "type"])
+        return df
+
+    return sampler
 
 
 if __name__ == "__main__":
     ndigits = 6  # The number of digits we truncate the operand to
-    sampling(ndigits, 10)
+    sampling(10)(ndigits)
