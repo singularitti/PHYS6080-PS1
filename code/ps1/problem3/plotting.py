@@ -7,7 +7,7 @@ import numpy as np
 from matplotlib.ticker import MaxNLocator
 from scipy import special
 
-from .bessel_functions import back_recursion, errors, max_errors
+from problem3.bessel_functions import back_recursion, errors, max_errors
 
 __all__ = ["plot_exact", "plot_raw", "plot_errors", "save_plots_gif", "plot_mat_errors"]
 
@@ -87,9 +87,11 @@ def plot_errors_inone(x, last_order, figname="p3_2.pdf"):
     fig, ax = plt.subplots()
     hsv = plt.get_cmap('hsv')
     for order in range(last_order, 3, -1):
-        ax.scatter(range(order + 1), errors(x, order, back_recursion),
-                   color =hsv(order / last_order),
-                   label=f"start from order {order}")
+        ax.scatter(
+            range(order + 1), errors(x, order, back_recursion),
+            color=hsv(order / last_order),
+            label=f"start from order {order}"
+        )
     ax.set_xlim(0, last_order)
     # See https://stackoverflow.com/a/34880501/3260253
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
