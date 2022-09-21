@@ -15,11 +15,11 @@ __all__ = ["myround", "truncate", "rounded_mul", "truncated_mul", "rounded_accum
 
 def myround(x, ndigits):
     mantissa, exponent = math.frexp(x)
-    return round(mantissa, ndigits) * 2 ** exponent
+    return round(mantissa, ndigits) * 2**exponent
 
 
 def truncate(x, ndigits):
-    return int(x * 10 ** ndigits) * 10 ** (-ndigits)
+    return int(x * 10**ndigits) * 10**(-ndigits)
 
 
 def rounded_mul(ndigits):
@@ -90,4 +90,4 @@ def averages(data):
 
 if __name__ == "__main__":
     ndigits = 6  # The number of digits we truncate the operand to
-    sampling(10)(ndigits)
+    data = sampling(10)(ndigits)
