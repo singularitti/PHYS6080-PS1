@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+from plotconfig import figpath
 from problem1.rounding import averages, sampling
 
 

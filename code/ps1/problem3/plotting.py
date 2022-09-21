@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib.ticker import MaxNLocator
 from scipy import special
 
-from ..plotting import figpath
+from ..plotconfig import figpath
 from ..problem3.bessel_functions import back_recursion, errors, max_errors
 
 __all__ = ["plot_exact", "plot_raw", "plot_errors", "save_plots_gif", "plot_mat_errors"]
