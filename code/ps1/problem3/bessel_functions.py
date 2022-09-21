@@ -5,7 +5,7 @@ import numpy as np
 from scipy import special
 
 __all__ = ['back_recursion', 'back_recursion_precise',
-           'errors', 'max_errors', 'minimum_steps']
+           'errors', 'max_errors', 'find_minimum_order']
 
 
 def coeff(order):
@@ -26,36 +26,40 @@ def normalize(bessel_functions):
     return bessel_functions / scaling_factor  # Divide all values in $\bm{I}$ by $s$
 
 
-def back_recursion(x, last_order):
-    orders = range(last_order + 1)
-    I = np.empty(last_order + 1)  # Orders from 0 to `last_order`
+def back_recursion(x, starting_order):
+    orders = range(starting_order + 1)
+    I = np.empty(starting_order + 1)  # Orders from 0 to `starting_order`
     I[-2:] = 1, 0  # Set the last two values
-    for n in np.flip(orders)[2:]:  # Orders from `last_order-2` to 0
+    for n in np.flip(orders)[2:]:  # Orders from `starting_order-2` to 0
         I[n] = I[n + 2] + 2 * (n + 1) / x * I[n + 1]
     return normalize(I)
 
 
-def back_recursion_precise(x, last_order):
-    orders = range(last_order + 1)
+def back_recursion_precise(x, starting_order):
+    orders = range(starting_order + 1)
     I = np.fromiter(map(Decimal, orders), Decimal)
     I[-2:] = Decimal(1), Decimal(0)
-    for n in np.flip(orders)[2:]:  # Orders from `last_order-2` to 0
+    for n in np.flip(orders)[2:]:  # Orders from `starting_order-2` to 0
         I[n] = I[n + 2] + 2 * (n + 1) / Decimal(x) * I[n + 1]
     return normalize(I)
 
 
-def errors(x, last_order, method=back_recursion):
-    I = method(x, last_order)
-    I_exact = np.array([special.iv(order, x) for order in range(last_order + 1)])
+def errors(x, starting_order, method=back_recursion):
+    I = method(x, starting_order)
+    I_exact = np.array([special.iv(order, x) for order in range(starting_order + 1)])
     return abs(I - I_exact)
 
 
-def max_errors(xrange, order_range, method):
-    return np.array([[errors(x, last_order, method).max() for x in xrange] for last_order in order_range])
+def max_errors(xs, ns, method):
+    return np.array([[errors(x, n, method).max() for x in xs] for n in ns])
 
 
-def minimum_steps(xrange, order_range, method):
-    error_matrix = max_errors(xrange, order_range, method)
+def find_minimum_order(xs, ns, method):
+    error_matrix = max_errors(xs, ns, method)
     for (i, row) in enumerate(error_matrix):
         if all(row < 1e-6):
-            return order_range[i]
+            return ns[i]
+
+
+if __name__ == '__main__':
+    n = find_minimum_order(range(1, 11), range(3, 40), back_recursion)
