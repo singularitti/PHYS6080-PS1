@@ -44,22 +44,22 @@ def back_recursion_precise(x, starting_order):
     return normalize(I)
 
 
-def errors(x, starting_order, method=back_recursion):
-    I = method(x, starting_order)
+def errors(x, starting_order):
+    I = back_recursion(x, starting_order)
     I_exact = np.array([special.iv(order, x) for order in range(starting_order + 1)])
     return abs(I - I_exact)
 
 
-def max_errors(xs, ns, method):
-    return np.array([[errors(x, n, method).max() for x in xs] for n in ns])
+def max_errors(xs, ns):
+    return np.array([[errors(x, n).max() for x in xs] for n in ns])
 
 
-def find_minimum_order(xs, ns, method):
-    error_matrix = max_errors(xs, ns, method)
+def find_minimum_order(xs, ns):
+    error_matrix = max_errors(xs, ns)
     for (i, row) in enumerate(error_matrix):
         if all(row < 1e-6):
             return ns[i]
 
 
 if __name__ == '__main__':
-    n = find_minimum_order(range(1, 11), range(3, 40), back_recursion)
+    n = find_minimum_order(range(1, 11), range(3, 40))

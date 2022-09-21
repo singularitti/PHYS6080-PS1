@@ -47,7 +47,7 @@ def plot_raw(x, starting_order):
 
 def plot_errors(x, starting_order, figname="p3_q1_2.pdf"):
     fig, ax = plt.subplots()
-    ax.scatter(range(starting_order + 1), errors(x, starting_order, back_recursion))
+    ax.scatter(range(starting_order + 1), errors(x, starting_order))
     ax.set_xlim(0, starting_order)
     # See https://stackoverflow.com/a/34880501/3260253
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
@@ -62,7 +62,7 @@ def plot_errors_x(x, starting_order, figname="p3_q1_3.pdf"):
     hsv = plt.get_cmap('hsv')
     for order in range(starting_order, 5, -1):
         ax.scatter(
-            range(order + 1), errors(x, order, back_recursion),
+            range(order + 1), errors(x, order),
             color=hsv(order / starting_order),
             label=f"$N={order}$"
         )
@@ -88,10 +88,10 @@ def save_plots_gif(x, ns, figname="errors.gif"):
             writer.append_data(image)
 
 
-def plot_mat_errors(method):
+def plot_mat_errors():
     xmin, xmax, nmin, nmax = 1, 11, 3, 20
     xs, ns = list(range(xmin, xmax)), list(range(nmin, nmax))
-    mat_errors = max_errors(xs, ns, method)
+    mat_errors = max_errors(xs, ns)
     mat_errors[mat_errors > 1] = 0
     fig, ax = plt.subplots()
     ax.imshow(mat_errors, aspect="equal", origin="lower", extent=[xmin, xmax, nmin, nmax])
