@@ -7,6 +7,8 @@ from scipy import special
 __all__ = ['back_recursion', 'back_recursion_precise',
            'errors', 'max_errors', 'find_minimum_order']
 
+NDIGITS = 24
+
 
 def coeff(order):
     if order == 0:
@@ -46,7 +48,11 @@ def back_recursion_precise(x, starting_order):
 
 def errors(x, starting_order):
     I = back_recursion(x, starting_order)
-    I_exact = np.array([special.iv(order, x) for order in range(starting_order + 1)])
+    if NDIGITS <= 15:
+        I_exact = np.array([special.iv(order, x) for order in range(starting_order + 1)])
+    else:
+        I = np.fromiter(map(Decimal, I), Decimal)
+        I_exact = back_recursion_precise(x, starting_order + 50)[:(starting_order + 1)]
     return abs(I - I_exact)
 
 
@@ -54,12 +60,14 @@ def max_errors(xs, ns):
     return np.array([[errors(x, n).max() for x in xs] for n in ns])
 
 
-def find_minimum_order(xs, ns):
+def find_minimum_order(xs, ns, atol=1 / 10**NDIGITS):
     error_matrix = max_errors(xs, ns)
-    for (i, row) in enumerate(error_matrix):
-        if all(row < 1e-6):
+    for i, row in enumerate(error_matrix):
+        if all(row < atol):
             return ns[i]
 
 
 if __name__ == '__main__':
-    n = find_minimum_order(range(1, 11), range(3, 40))
+    xs = range(1, 11)
+    ns = range(150, 180)
+    print(find_minimum_order(xs, ns, Decimal(1) / 10**24))
