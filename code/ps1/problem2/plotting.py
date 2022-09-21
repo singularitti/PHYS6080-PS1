@@ -22,7 +22,7 @@ def plot():
     ax.set_xlabel("Numbers of multiplications ($n$)")
     ax.set_ylabel("Time per loop ($t$)")
     ax.legend(loc="best")
-    fig.savefig(figpath("p2_q2.pdf"))
+    fig.savefig(figpath("p2_q3.pdf"))
     return fig, ax
 
 
