@@ -3,6 +3,8 @@ import timeit
 
 import numpy as np
 
+__all__ = ['time_mul']
+
 
 def time1():
     setup = "import math"
@@ -46,7 +48,32 @@ def time3():
     print("The time per operation is :", dt / n)
 
 
+def time_mul(n, number):
+    setup = f"""\
+from functools import reduce
+from operator import mul
+
+import numpy as np
+
+from problem1.rounding import rounded_accumulate, truncate, truncated_accumulate
+
+ndigits = 6
+x = np.random.rand()
+ys = np.random.rand({n}) + 0.542
+"""
+    t1 = timeit.timeit(stmt="reduce(mul, ys, x)", setup=setup, number=number)
+    t2 = timeit.timeit(
+        stmt="rounded_accumulate(ndigits)(ys, x)", setup=setup, number=number
+    )
+    t3 = timeit.timeit(
+        stmt="truncated_accumulate(ndigits)(ys, truncate(x, ndigits))", setup=setup,
+        number=number
+    )
+    return t1, t2, t3
+
+
 if __name__ == '__main__':
     time1()
     time2()
     time3()
+    time_mul(1000, 1000)
