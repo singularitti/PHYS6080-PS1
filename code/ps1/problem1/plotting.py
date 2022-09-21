@@ -41,7 +41,7 @@ def plot_averages(data):
     ax.set_xlabel("Numbers of multiplications ($n$)")
     ax.set_ylabel("Average fractional differences")
     ax.legend(loc="best")
-    fig.savefig(figpath("p1_q1.pdf"))
+    fig.savefig(figpath("p1_q1_2.pdf"))
     return fig, ax
 
 
@@ -55,7 +55,7 @@ def plot_averages_diff(data):
     ax.set_ylim(min(y), max(y))
     ax.set_xlabel("Numbers of multiplications ($n$)")
     ax.set_ylabel("Differences between rounding and truncation")
-    fig.savefig(figpath("p1_q2.pdf"))
+    fig.savefig(figpath("p1_q1_3.pdf"))
     return fig, ax
 
 
