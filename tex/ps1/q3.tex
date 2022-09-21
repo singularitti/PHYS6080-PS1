@@ -100,26 +100,31 @@ So, we could presume that:
     \caption{An example}
     \label{lst:find_n}
     \begin{pythoncode}
-        def errors(x, starting_order, method=back_recursion):
-            I = method(x, starting_order)
+        NDIGITS = 6
+
+
+        def errors(x, starting_order):
+            I = back_recursion(x, starting_order)
             I_exact = np.array([special.iv(order, x) for order in range(starting_order + 1)])
             return abs(I - I_exact)
-        
-        
-        def max_errors(xs, ns, method):
-            return np.array([[errors(x, n, method).max() for x in xs] for n in ns])
-        
-        
-        def find_minimum_order(xs, ns, method):
-            error_matrix = max_errors(xs, ns, method)
-            for (i, row) in enumerate(error_matrix):
-                if all(row < 1e-6):
+
+
+        def max_errors(xs, ns):
+            return np.array([[errors(x, n).max() for x in xs] for n in ns])
+
+
+        def find_minimum_order(xs, ns, atol=1 / 10**NDIGITS):
+            error_matrix = max_errors(xs, ns)
+            for i, row in enumerate(error_matrix):
+                if all(row < atol):
                     return ns[i]
         \end{pythoncode}
 \end{algorithm}
 
 In Snippet \ref{lst:find_n}, we implement an algorithm that can find the minimum order
-needed for us to satisfy the desired criterion. In function \code{errors}, we compare
+needed for us to satisfy the desired criterion.
+Here, the constant \code{NDIGITS} specifies how many decimal places are desired.
+In function \code{errors}, we compare
 our $I_n(x)$ with the SciPy-calculated results at a certain $x = x_0$ and starting order $N$.
 By plotting the back recursion figures, we could find that usually, the error goes up
 as $n$ decreases from $N$ to $0$ since that is how the numerical errors accumulate.
@@ -130,7 +135,7 @@ in Fig. \ref{fig:I_n_3}, we can see the maximal error happens at $n = 11$, which
 interesting fluctuation that may be caused by numerical inaccuracy. However, this phenomenon
 will not change the correctness of Argument \ref{thm:I_n_x}.
 
-\begin{figure}[H] % 2 independent side-by-side figures
+\begin{figure} % 2 independent side-by-side figures
     \centering
     \begin{minipage}[t]{0.45\linewidth}
         \centering
@@ -164,7 +169,7 @@ smaller $N$. As you can see, for small $N$'s, their deviations from exact values
             hsv = plt.get_cmap('hsv')
             for order in range(starting_order, 5, -1):
                 ax.scatter(
-                    range(order + 1), errors(x, order, back_recursion),
+                    range(order + 1), errors(x, order),
                     color=hsv(order / starting_order),
                     label=f"$N={order}$"
                 )
