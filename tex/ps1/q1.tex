@@ -68,11 +68,26 @@ Then we can define the accumulated results of $x$ times $y$, as shown in Snippet
     \end{pythoncode}
 \end{algorithm}
 
-Notice how the deviation for the truncated case is growing $10$ times worse with every $10$
-times increase in floating point operations:
+\Question For this problem, you should start from this code and adapt it to be run many times in a
+loop (hundreds of times). For each time through the loop, you should store the fractional
+differences for both rounding and truncation after $10$, $100$, $1000$ and $10000$ multiplications.
+Plot a histogram of the deviations for both cases and the three different numbers of
+multiplications. Plot the average difference versus the number of multiplies for both the
+rounding and truncation cases to see how it scales with the number of multiplies.
+
+\Answer Functions \code{rounded_accumulate} and \code{truncated_accumulate} in Snippet
+\ref{lst:accumulate} are already wrapped and ready to be run in loops.
+The next step to do is to store all the intermediate data as required.
+The \code{pandas.DataFrame} is especially suitable for doing such job.
+So here we will store the real values and the fractional
+differences for both rounding and truncation after $10$, $100$, $1000$ and $10000$
+multiplications.
+The corresponding code is written in Snippet \ref{lst:compare}.
 
 \begin{algorithm}
-    \caption{An example}
+    \caption{Storing the real values and the fractional
+        differences for both rounding and truncation after $10$, $100$, $1000$ and $10000$
+        multiplications.}
     \label{lst:compare}
     \begin{pythoncode}
         ndigits = 6  # The number of digits we truncate the operand to
@@ -93,9 +108,15 @@ times increase in floating point operations:
     \end{pythoncode}
 \end{algorithm}
 
-\begin{table}[H]
+Here we give an example table of results, as shown in Tab. \ref{tab:compare}. Notice how the
+deviation for the truncated case is growing $10$ times worse with every $10$ times increase
+in floating point operations.
+
+\begin{table}
     \centering
-    \caption{An example}
+    \caption{An example of how the rounded and truncated results differ from the results of
+        standard floating point numbers after $0$, $10$, $100$, $1000$ and $10000$
+        multiplications.}
     \label{tab:compare}
     \begin{tabular}{@{}ccccc@{}}
         \toprule
@@ -118,23 +139,65 @@ times increase in floating point operations:
     \end{tabular}
 \end{table}
 
-\Question For this problem, you should start from this code and adapt it to be run many times in a
-loop (hundreds of times). For each time through the loop, you should store the fractional
-differences for both rounding and truncation after $100$, $1000$ and $10000$ multiplications.
-Plot a histogram of the deviations for both cases and the three different numbers of
-multiplications. Plot the average difference versus the number of multiplies for both the
-rounding and truncation cases to see how it scales with the number of multiplies.
+Now we plot two histograms of the deviations for both cases, as shown in
+Fig. \ref{fig:histogram}.
+These distributions are obtained by sampling $100$ times with
+large numbers of multiplications.
+In the figure, the fractional difference means that
+%
+\begin{equation}
+    \Delta = \frac{x_{\alpha} - x_\textnormal{exact}}{x_\textnormal{exact}},
+\end{equation}
+%
+where $\alpha$ denotes either rounded or truncated case.
+As you can see, the errors for the rounded case form a normal distribution around
+$0$, and the errors for the truncated case gather around the right side of $0$.
+This means the errors for the latter accumulate faster than the former for the same
+number of multiplications.
 
-\begin{figure}[H]
+\begin{figure}
     \centering
-    \includegraphics[width=0.8\linewidth]{p1_q1_1}
-    \caption{Average difference versus the number of multiplies for both the rounding and truncation cases.}
+    \includegraphics[width=\linewidth]{p1_q1_1}
+    \caption{A histogram of the deviations for both the rounded (left) and
+        truncated (right) cases.}
+    \label{fig:histogram}
+\end{figure}
+
+We plot the average difference versus the number of multiplications for both the
+rounding and truncation cases in Fig. \ref{fig:compare_rounding_truncation}.
+And we do a sampling of these results for $n = 10$, $100$, $1000$, and $10000$ times,
+the calculates their averages.
+
+As you can see, for the rounded case, the errors look randomly distributed as a function
+of $n$. It does show a little ``sinusoidal'' trend but is not obvious.
+On the other hand, the truncated values show an almost linear relation to $n$.
+Since both the horizontal and vertical axes use logarithmic scales, the average
+fractional differences ($r$) and $n$ should satisfy the power functions:
+%
+\begin{equation}
+    r = a n^k
+\end{equation}
+%
+where $a$ corresponds to the intercept (around $10^{-5}$), and $k$ corresponds to the
+slope.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{p1_q1_2}
+    \caption{Average difference versus the number of multiplications for both
+        the rounding and truncation cases.}
     \label{fig:compare_rounding_truncation}
 \end{figure}
 
-\begin{figure}[H]
+If we subtract the average fractional differences of the rounded case from the
+truncated case, we can see a clear exponentially growing difference, as shown in
+Fig. \ref{fig:diff_rounding_truncation}. This tells us the errors of the truncated
+cases grow much faster than that of the rounded case, this is exactly what we observed
+from Tab. \ref{tab:compare}.
+
+\begin{figure}
     \centering
-    \includegraphics[width=0.8\linewidth]{p1_q1_2}
+    \includegraphics[width=0.8\linewidth]{p1_q1_3}
     \caption{Differences between average difference of the rounding and truncation cases.}
     \label{fig:diff_rounding_truncation}
 \end{figure}
