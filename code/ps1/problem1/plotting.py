@@ -65,6 +65,7 @@ if __name__ == "__main__":
         np.linspace(10, 1000, dtype=int), np.linspace(1000, 10000, num=10, dtype=int)
     )
     raw_data = sampling(100)(ndigits, at=sampling_at)
+    plot_histogram(raw_data)
     times, rounded, truncated = prepare_averages(averages(raw_data))
     plot_averages(averages(raw_data))
     plot_averages_diff(averages(raw_data))
