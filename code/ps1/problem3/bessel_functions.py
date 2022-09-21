@@ -30,7 +30,7 @@ def back_recursion(x, starting_order):
     orders = range(starting_order + 1)
     I = np.empty(starting_order + 1)  # Orders from 0 to `starting_order`
     I[-2:] = 1, 0  # Set the last two values
-    for n in np.flip(orders)[2:]:  # Orders from `starting_order-2` to 0
+    for n in reversed(orders[:-2]):  # Orders from `starting_order-2` to 0
         I[n] = I[n + 2] + 2 * (n + 1) / x * I[n + 1]
     return normalize(I)
 
@@ -39,8 +39,8 @@ def back_recursion_precise(x, starting_order):
     orders = range(starting_order + 1)
     I = np.fromiter(map(Decimal, orders), Decimal)
     I[-2:] = Decimal(1), Decimal(0)
-    for n in np.flip(orders)[2:]:  # Orders from `starting_order-2` to 0
-        I[n] = I[n + 2] + 2 * (n + 1) / Decimal(x) * I[n + 1]
+    for n in reversed(orders[:-2]):  # Orders from `starting_order-2` to 0
+        I[n] = I[n + 2] + Decimal(2) * (n + 1) / Decimal(x) * I[n + 1]
     return normalize(I)
 
 
