@@ -23,19 +23,24 @@ def plot_averages(data):
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlim(min(times), max(times))
-    ax.set_xlabel("numbers of multiplications")
-    ax.set_ylabel("average difference for the rounding and truncation cases")
+    ax.set_xlabel("Numbers of multiplications ($n$)")
+    ax.set_ylabel("Average fractional differences")
     ax.legend(loc="best")
+    fig.savefig(figpath("p1_q1.pdf"))
     return fig, ax
 
 
 def plot_averages_diff(data):
     times, rounded, truncated = prepare_averages(data)
     fig, ax = plt.subplots()
-    ax.scatter(times, truncated - rounded)
+    y = truncated - rounded
+    ax.scatter(times, y, color="k")
     ax.set_xscale("log")
     ax.set_xlim(min(times), max(times))
-    ax.set_xlabel("numbers of multiplications")
+    ax.set_ylim(min(y), max(y))
+    ax.set_xlabel("Numbers of multiplications ($n$)")
+    ax.set_ylabel("Differences between rounding and truncation")
+    fig.savefig(figpath("p1_q2.pdf"))
     return fig, ax
 
 
