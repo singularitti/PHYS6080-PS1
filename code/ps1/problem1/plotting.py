@@ -19,15 +19,31 @@ def plot_averages(data):
     fig, ax = plt.subplots()
     ax.scatter(times, rounded, label="rounded")
     ax.scatter(times, truncated, label="truncated")
-    ax.set_yscale('log')
-    ax.legend(loc="best")
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlim(min(times), max(times))
     ax.set_xlabel("numbers of multiplications")
     ax.set_ylabel("average difference for the rounding and truncation cases")
+    ax.legend(loc="best")
     return fig, ax
 
 
-if __name__ == '__main__':
+def plot_averages_diff(data):
+    times, rounded, truncated = prepare_averages(data)
+    fig, ax = plt.subplots()
+    ax.scatter(times, truncated - rounded)
+    ax.set_xscale("log")
+    ax.set_xlim(min(times), max(times))
+    ax.set_xlabel("numbers of multiplications")
+    return fig, ax
+
+
+if __name__ == "__main__":
     ndigits = 6  # The number of digits we truncate the operand to
-    raw_data = sampling(10)(ndigits)
+    sampling_at = np.append(
+        np.linspace(10, 1000, dtype=int), np.linspace(1000, 10000, num=10, dtype=int)
+    )
+    raw_data = sampling(100)(ndigits, at=sampling_at)
     times, rounded, truncated = prepare_averages(averages(raw_data))
     plot_averages(averages(raw_data))
+    plot_averages_diff(averages(raw_data))
