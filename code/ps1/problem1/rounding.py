@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 __all__ = ["myround", "truncate", "rounded_mul", "truncated_mul", "rounded_accumulate",
-           "truncated_accumulate", "sampling", "distribution", "averages"]
+           "truncated_accumulate", "sampling", "deviations", "averages"]
 
 
 def myround(x, ndigits):
@@ -69,26 +69,10 @@ def sampling(times):
     return sampler
 
 
-def distribution(data):
-    colnames = ["n", "full", "rounded", "truncated"]
-    df1 = pd.DataFrame(columns=colnames)
-    df2 = pd.DataFrame(columns=colnames)
-    for n, group in data.groupby('n'):
-        for t, g in group.groupby('type'):
-            if t == "value":
-                print(type(g["full"]))
-                df1 = pd.concat(
-                    [df1, pd.DataFrame(
-                        [[n, g["full"], g["rounded"], g["truncated"]]], columns=colnames
-                    )]
-                )
-            else:
-                df2 = pd.concat(
-                    [df2, pd.DataFrame(
-                        [[n, g["full"], g["rounded"], g["truncated"]]], columns=colnames
-                    )]
-                )
-    return df1, df2
+def deviations(data):
+    for t, g in data.groupby('type'):
+        if t == "frac diff":
+            return g
 
 
 def averages(data):
