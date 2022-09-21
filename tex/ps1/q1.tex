@@ -169,8 +169,8 @@ And we do a sampling of these results for $n = 10$, $100$, $1000$, and $10000$ t
 the calculates their averages.
 
 As you can see, for the rounded case, the errors look randomly distributed as a function
-of $n$. It does show a little ``sinusoidal'' trend but is not obvious.
-On the other hand, the truncated values show an almost linear relation to $n$.
+of $n$. It does show a little ``ups and downs'' trend but is not obvious.
+On the other hand, the truncated values show an almost linear relation to $n$ (in log-log scale).
 Since both the horizontal and vertical axes use logarithmic scales, the average
 fractional differences ($r$) and $n$ should satisfy the power functions:
 %
@@ -189,7 +189,7 @@ slope.
     \label{fig:compare_rounding_truncation}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\linewidth]{p1_q1_3}
     \caption{Differences between average difference of the rounding and truncation cases.}
