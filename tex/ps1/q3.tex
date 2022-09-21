@@ -228,3 +228,83 @@ decimal places of accuracy. Suppose for some reason you need the modified Bessel
 $I_0(x)$ to $I_5(x)$ accurate to $24$ decimal places for $x$ in the range $1$ to $10$. How
 many back recursion steps do you need to achieve this?
 
+\Answer To achieve $24$ decimal places accuracy, the default SciPy \code{special.iv}
+is not enough to solve this problem since it uses $64$-bit floating point numbers
+and thus only have $15$ digits of accuracy.
+So we should write another high-precision back recursion algorithm to represent the exact
+values of $I_n(x)$.
+
+So we need to modify our \code{back_recursion} function a little, as shown in
+\ref{lst:back_recursion_precise}. Different from function \code{back_recursion}
+(Snippet \ref{lst:back_recursion}), now everything in this function is a \code{Decimal}
+object.
+
+\begin{algorithm}[H]
+    \caption{}
+    \label{lst:back_recursion_precise}
+    \begin{pythoncode}
+        def back_recursion_precise(x, starting_order):
+            orders = range(starting_order + 1)
+            I = np.fromiter(map(Decimal, orders), Decimal)
+            I[-2:] = Decimal(1), Decimal(0)
+            for n in reversed(orders[:-2]):  # Orders from `starting_order-2` to 0
+                I[n] = I[n + 2] + 2 * (n + 1) / Decimal(x) * I[n + 1]
+            return normalize(I)
+        \end{pythoncode}
+\end{algorithm}
+
+We also need to redefine how we measure the difference between our algorithm and the
+``exact algorithm''. However, as we mentioned, we cannot use \code{special.iv} now.
+So what could be the exact values?
+One idea is to iterate many more steps until we are sure that our
+\code{back_recursion_precise} is definitely converged to the exact values.
+Therefore, we rewrite the function \code{errors} in Snippet \ref{lst:find_n},
+to let it adapt more decimal places, as shown in Snippet \ref{lst:new_errors}.
+
+\begin{algorithm}
+    \caption{}
+    \label{lst:new_errors}
+    \begin{pythoncode}
+        NDIGITS = 24
+
+
+        def errors(x, starting_order):
+            if NDIGITS <= 15:
+                I = back_recursion(x, starting_order)
+                I_exact = np.array([special.iv(order, x) for order in range(starting_order + 1)])
+            else:
+                I = back_recursion_precise(x, starting_order)
+                I_exact = back_recursion_precise(x, starting_order + 100)[:(starting_order + 1)]
+            return abs(I - I_exact)
+
+
+        xs = range(10, 11)
+        ns = range(15000, 15100, 1)
+        n = find_minimum_order(xs, ns, Decimal(1) / 10**24)
+        \end{pythoncode}
+\end{algorithm}
+
+If \code{NDIGITS} is smaller than $15$, then using function \code{back_recursion} and
+\code{special.iv} is enough to calculate the rough and exact values of $I_n(x)$. So the
+\code{errors} function falls back to the one we defined in Snippet \ref{lst:find_n}. On the
+other hand, If it is larger than $15$, then we calculate both the rough and exact values of
+$I_n(x)$ using \code{back_recursion_precise}, only with the exact value (\code{I_exact}) to
+be a certain amount ($m$) more recurrence steps than the rough one (\code{I}). Here, we
+choose $m = 100$.
+And the rest of the steps are the same as what we did in Question 1.
+
+However, after scanning $N$ for a very large range ($10 - 20000$), I found that this
+algorithm is very difficult to converge below $10^{-24}$, especially when $x = 10$.
+As we know from the previous question, $I_0(10) \approx 2815.7166284662544$. So it is
+very hard to let its deviation to be as small as $10^{-24}$. The best result we
+could achieve is when $N = 15009$, and
+%
+\begin{equation}
+    \sup_{x \in [1, 10]} \lvert I_{N}(x) - I_{N+100}(x) \rvert < 10^{-21}.
+\end{equation}
+%
+After $N = 20000$, our computer will throw an overflow error. So we could not
+arrive at the exact $N$ for our algorithm accurate to $24$ decimal places.
+We have considered changing $m$ from $10$ to $1000$, but the result is still
+the same.
+
