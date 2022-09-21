@@ -15,9 +15,6 @@ point number.
     \caption{Rounding a floating point number to a certain number of digits.}
     \label{lst:round}
     \begin{pythoncode}
-        import math
-
-
         def myround(x, ndigits):
             mantissa, exponent = math.frexp(x)
             return round(mantissa, ndigits) * 2**exponent
@@ -46,8 +43,8 @@ rounded and truncated versions of multiplication, as in Snippet \ref{lst:multipl
         def rounded_mul(x, y, ndigits):
             x, y = myround(x, ndigits), myround(y, ndigits)
             return x * y
-        
-        
+
+
         def truncated_mul(x, y, ndigits):
             return x * truncate(y, ndigits)
     \end{pythoncode}
@@ -60,14 +57,11 @@ Then we can define the accumulated results of $x$ times $y$, as shown in Snippet
     \caption{Rounded and truncated versions of multiplication of floating point numbers.}
     \label{lst:accumulate}
     \begin{pythoncode}
-        from functools import partial, reduce
-
-
         def rounded_accumulate(ys, ndigits, initial):
             func = partial(rounded_mul, ndigits=ndigits)
             return reduce(func, ys, initial)
-        
-        
+
+
         def truncated_accumulate(ys, ndigits, initial):
             func = partial(truncated_mul, ndigits=ndigits)
             return reduce(func, ys, truncate(initial, ndigits))
@@ -81,9 +75,6 @@ times increase in floating point operations:
     \caption{An example}
     \label{lst:compare}
     \begin{pythoncode}
-        from operator import mul
-        import pandas as pd
-        
         ndigits = 6  # The number of digits we truncate the operand to
         x = np.random.rand()
         ys = np.random.rand(10000) + 0.542
@@ -133,3 +124,18 @@ differences for both rounding and truncation after $100$, $1000$ and $10000$ mul
 Plot a histogram of the deviations for both cases and the three different numbers of
 multiplications. Plot the average difference versus the number of multiplies for both the
 rounding and truncation cases to see how it scales with the number of multiplies.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{p1_q1_1}
+    \caption{Average difference versus the number of multiplies for both the rounding and truncation cases.}
+    \label{fig:compare_rounding_truncation}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{p1_q1_2}
+    \caption{Differences between average difference of the rounding and truncation cases.}
+    \label{fig:diff_rounding_truncation}
+\end{figure}
+
