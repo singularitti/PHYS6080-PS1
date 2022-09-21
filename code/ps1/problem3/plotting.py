@@ -41,11 +41,11 @@ def plot_raw(x, starting_order):
     ax.set_xlabel("Order of the modified Bessel function ($n$)")
     ax.set_ylabel(f"$I_{{n}}(x={x})$")
     ax.legend(loc="best")
-    fig.savefig(figpath("q3_1.pdf"))
+    fig.savefig(figpath("p3_q1_2.pdf"))
     return fig, ax
 
 
-def plot_errors(x, starting_order, figname="p3_q1_2.pdf"):
+def plot_errors(x, starting_order, figname="p3_q1_3.pdf"):
     fig, ax = plt.subplots()
     ax.scatter(range(starting_order + 1), errors(x, starting_order))
     ax.set_xlim(0, starting_order)
@@ -57,7 +57,7 @@ def plot_errors(x, starting_order, figname="p3_q1_2.pdf"):
     return fig, ax
 
 
-def plot_errors_x(x, starting_order, figname="p3_q1_3.pdf"):
+def plot_errors_x(x, starting_order, figname="p3_q1_4.pdf"):
     fig, ax = plt.subplots()
     hsv = plt.get_cmap('hsv')
     for order in range(starting_order, 5, -1):
