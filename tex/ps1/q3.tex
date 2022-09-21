@@ -25,9 +25,6 @@ by a scaling factor, which is determined by the normalizer \eqref{eq:normalize}.
     \caption{Normalization algorithm for a series of modified Bessel functions.}
     \label{lst:normalize}
     \begin{pythoncode}
-        import numpy as np
-
-
         def coeff(i):
             if i == 0:
                 return 1
@@ -49,9 +46,10 @@ by a scaling factor, which is determined by the normalizer \eqref{eq:normalize}.
 Now we can write our back recursion algorithm, as shown in Snippet \ref{lst:back_recursion}.
 In function \code{back_recursion}, we first initialize an empty vector \code{I} which
 will store the values of the modified Bessel functions of each order up to
-\code{max_order} ($30$ in this example) at $x$, i.e., $I_n(x)$, where
-$n = 1, 2, \ldots, 30$.
-Then we set the last two values of \code{I} to be anything we want, $1$ and $0$ here,
+\code{max_order} (denoted as $N$, where $N \geq 2$) at $x$, i.e., $I_n(x)$, where
+$n = 0, 1, \ldots, N$.
+Then we set the last two values of \code{I} to be anything we want, i.e.,
+$I_{N-1}(x) = 1$ and $I_N(x) = 0$ here,
 since $I_n(x)$ at fixed $x$ decreases with increasing $n$.
 And we work back to the first order using the recurrence relation:
 %
@@ -73,6 +71,110 @@ At last, we normalize the series with normalizer \eqref{eq:normalize}.
                 I[n] = I[n + 2] + 2 * (n + 1) / x * I[n + 1]
             return normalize(I)
     \end{pythoncode}
+\end{algorithm}
+
+Before we go further, let us have a look at the properties of the modified Bessel
+functions. First, we can see from Fig. \ref{fig:bessel} that,
+$I_n(x)$ increases exponentially with increasing $x$.
+And at fixed $x$, with increasing order $n$, $I_n(x)$ decreases drastically as well.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{p3_q1_1}
+    \caption{The modified Bessel function of the first kind $I_n(x)$ with
+        up to $10$th order at $x$ from $1$ to $10$.}
+    \label{fig:bessel}
+\end{figure}
+
+Then it is natural to assume that our naïve back recursion algorithm will have larger
+errors with increasing $x$ and decreasing $n$. Because that is where tiny numerical
+errors in previous steps would result in large deviations in later steps.
+So, we could presume that:
+\begin{theorem}\label{thm:I_n_x}
+    If a starting order $N$ satisfies the following condition:
+    for $x = 10$, the back-recurred $I_0(x)$ to $I_5(x)$ are all within $6$ decimal
+    places of accuracy. Then $N$ will also satisfy the conditions for all $x$ from $1 - 9$.
+\end{theorem}
+
+In Snippet \ref{lst:find_n}, we implement an algorithm that can find the minimum order
+needed for us to satisfy the desired criterion. In function \code{errors}, we compare
+our $I_n(x)$ with the SciPy-calculated results at a certain $x = x_0$ and starting order $N$.
+By plotting the back recursion figures, we could find that usually, the error goes up
+as $n$ decreases from $N$ to $0$ since that is how the numerical errors accumulate.
+So the maximal deviation from the exact value is often achieved at $n = 0$, as shown in
+Fig. \ref{fig:I_n_10}. However, the statement ``the maximal deviation from the exact value
+is achieved at $n = 0$'' is not always true for some small values of $x$. For example,
+in Fig. \ref{fig:I_n_3}, we can see the maximal error happens at $n = 11$, which is an
+interesting fluctuation that may be caused by numerical inaccuracy. However, this phenomenon
+will not change the correctness of Argument \ref{thm:I_n_x}.
+
+\begin{figure}[H] % 2 independent side-by-side figures
+    \centering
+    \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{p3_q1_2}
+        \caption{The differences between the exact value of $I_n(10)$ and those calculated by
+            our naïve back recursion algorithm, where the starting order $N = 15$.}
+        \label{fig:I_n_10}
+    \end{minipage}
+    \hfil
+    \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{p3_1_11}
+        \caption{An interesting behavior where the maximal accumulated error happens at
+            $n = 11$ when $x$ is small ($x = 3$ here).}
+        \label{fig:I_n_3}
+    \end{minipage}
+\end{figure}
+
+In function \code{max_errors}, we apply this algorithm to a matrix spanned by
+$x = 1 \to 10$ and $n = 5 \to 39$.
+And function \code{minimum_steps} is used to filter out the first $N$ which uniformly
+satisfy the desired criterion for all $x = 1 - 10$.
+We also write a plotting function that
+
+\begin{algorithm}[H]
+    \caption{An example}
+    \label{lst:find_n}
+    \begin{pythoncode}
+        def errors(x, last_order, method=back_recursion):
+            I = method(x, last_order)
+            I_exact = np.array([special.iv(order, x) for order in range(last_order + 1)])
+            return abs(I - I_exact)
+
+
+        def max_errors(xrange, order_range, method):
+            return np.array(
+                [[errors(x, last_order, method).max() for x in xrange] for last_order in
+                order_range]
+            )
+
+
+        def minimum_steps(xrange, order_range, method):
+            error_matrix = max_errors(xrange, order_range, method)
+            for (i, row) in enumerate(error_matrix):
+                if all(row < 1e-6):
+                    return order_range[i]
+
+
+        def plot_errors_x(x, last_order, figname="p3_q1_3.pdf"):
+            fig, ax = plt.subplots()
+            hsv = plt.get_cmap('hsv')
+            for order in range(last_order, 5, -1):
+                ax.scatter(
+                    range(order + 1), errors(x, order, back_recursion),
+                    color=hsv(order / last_order),
+                    label=f"$N={order}$"
+                )
+            ax.set_xlim(0, last_order)
+            # See https://stackoverflow.com/a/34880501/3260253
+            ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+            ax.set_xlabel("Order of the modified Bessel function ($n$)")
+            ax.set_ylabel(f"$\Delta = I_{{n}}(x={x}) - I_{{n,\\textnormal{{exact}}}}(x={x})$")
+            ax.legend(loc="upper right", ncol=4, fontsize=9)
+            fig.savefig(figpath(str(x) + figname))
+            return fig, ax
+        \end{pythoncode}
 \end{algorithm}
 
 \Question This code also uses the \code{Decimal} module to allow you to do back recursion to many
