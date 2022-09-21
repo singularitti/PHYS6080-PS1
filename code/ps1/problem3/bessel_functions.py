@@ -42,17 +42,17 @@ def back_recursion_precise(x, starting_order):
     I = np.fromiter(map(Decimal, orders), Decimal)
     I[-2:] = Decimal(1), Decimal(0)
     for n in reversed(orders[:-2]):  # Orders from `starting_order-2` to 0
-        I[n] = I[n + 2] + Decimal(2) * (n + 1) / Decimal(x) * I[n + 1]
+        I[n] = I[n + 2] + 2 * (n + 1) / Decimal(x) * I[n + 1]
     return normalize(I)
 
 
 def errors(x, starting_order):
-    I = back_recursion(x, starting_order)
     if NDIGITS <= 15:
+        I = back_recursion(x, starting_order)
         I_exact = np.array([special.iv(order, x) for order in range(starting_order + 1)])
     else:
-        I = np.fromiter(map(Decimal, I), Decimal)
-        I_exact = back_recursion_precise(x, starting_order + 50)[:(starting_order + 1)]
+        I = back_recursion_precise(x, starting_order)
+        I_exact = back_recursion_precise(x, starting_order + 100)[:(starting_order + 1)]
     return abs(I - I_exact)
 
 
@@ -68,6 +68,6 @@ def find_minimum_order(xs, ns, atol=1 / 10**NDIGITS):
 
 
 if __name__ == '__main__':
-    xs = range(1, 11)
-    ns = range(150, 180)
+    xs = range(10, 11)
+    ns = range(15000, 15100, 1)
     print(find_minimum_order(xs, ns, Decimal(1) / 10**24))
