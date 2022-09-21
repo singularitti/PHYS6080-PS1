@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from plotconfig import figpath
-from problem1.rounding import averages, sampling
+from problem1.rounding import averages, deviations, sampling
 
 
 def prepare_averages(data):
@@ -13,6 +13,21 @@ def prepare_averages(data):
         rounded[i] = columns["rounded"]
         truncated[i] = columns["truncated"]
     return times, rounded, truncated
+
+
+def plot_histogram(data):
+    df = deviations(data)
+    rounded, truncated = df["rounded"], df["truncated"]
+    fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
+    ax1.hist(rounded, 50, label="deviations for rounded")
+    ax2.hist(truncated, 50, label="deviations for truncated", color="orange")
+    ax1.set_xlim(min(rounded), max(rounded))
+    ax1.set_xlabel(r"$\Delta = \frac{ x' - x }{ x }$")
+    ax2.set_xlabel(r"$\Delta = \frac{ x' - x }{ x }$")
+    ax1.set_ylabel("count")
+    ax2.set_xlim(min(truncated), max(truncated))
+    fig.savefig(figpath("p1_q1_1.pdf"))
+    return fig, (ax1, ax2)
 
 
 def plot_averages(data):
