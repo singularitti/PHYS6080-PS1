@@ -96,6 +96,28 @@ So, we could presume that:
     places of accuracy. Then $N$ will also satisfy the conditions for all $x$ from $1 - 9$.
 \end{theorem}
 
+\begin{algorithm}
+    \caption{An example}
+    \label{lst:find_n}
+    \begin{pythoncode}
+        def errors(x, starting_order, method=back_recursion):
+            I = method(x, starting_order)
+            I_exact = np.array([special.iv(order, x) for order in range(starting_order + 1)])
+            return abs(I - I_exact)
+        
+        
+        def max_errors(xs, ns, method):
+            return np.array([[errors(x, n, method).max() for x in xs] for n in ns])
+        
+        
+        def find_minimum_order(xs, ns, method):
+            error_matrix = max_errors(xs, ns, method)
+            for (i, row) in enumerate(error_matrix):
+                if all(row < 1e-6):
+                    return ns[i]
+        \end{pythoncode}
+\end{algorithm}
+
 In Snippet \ref{lst:find_n}, we implement an algorithm that can find the minimum order
 needed for us to satisfy the desired criterion. In function \code{errors}, we compare
 our $I_n(x)$ with the SciPy-calculated results at a certain $x = x_0$ and starting order $N$.
@@ -174,7 +196,12 @@ Thus, for
 \begin{equation}
     \sup_{x \in [1, 10]} \lvert I_N(x) - I_{N,\textnormal{exact}}(x) \rvert < 10^{-6},
 \end{equation}
+%
 the minimal $N$ required is $29$.
+To be more intuitive, we have also plotted $I_n(x)$ calculated by back recursion
+in a matrix of figures ($x = 1 - 10$, and $n = 5 - 35$) and made them into some GIF files.
+This can be achieved by invoking the \code{save_plots_gif} function, as shown in
+Snippet \ref{lst:gif}. From these figures we can see that $29$ is an appropriate number.
 
 \begin{algorithm}[H]
     \caption{}
