@@ -44,7 +44,7 @@ def sampling(times):
     colnames = ["n", "type", "full", "rounded", "truncated", "times"]
     df = pd.DataFrame(columns=colnames)
 
-    def sampler(ndigits):
+    def sampler(ndigits, at=(10, 100, 1000, 10000)):
         nonlocal df
         for time in range(1, times + 1):
             x = np.random.rand()
@@ -54,7 +54,7 @@ def sampling(times):
                 columns=colnames,
             )
             df = pd.concat([df, new1], ignore_index=True)
-            for n in (10, 100, 1000, 10000):
+            for n in at:
                 a = reduce(mul, ys[:n], x)
                 b = rounded_accumulate(ndigits)(ys[:n], x)
                 c = truncated_accumulate(ndigits)(ys[:n], truncate(x, ndigits))
