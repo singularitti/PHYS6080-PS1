@@ -102,5 +102,9 @@ def plot_mat_errors():
 
 
 if __name__ == '__main__':
+    plot_exact(10)
+    plot_raw(10, 15)
+    plot_errors(10, 15)
+    plot_errors_x(10, 32)
     for x in range(1, 11):
         save_plots_gif(x, range(5, 35), figname=f"errors_{x}.gif")
