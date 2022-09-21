@@ -5,7 +5,7 @@ In the sample codes below, two different timing methods are shown. The first exa
 \code{timeit} module method \code{timeit} to time a single statement.
 The statement is repeated \code{n} times to get the average time per call.
 
-\begin{algorithm}[H]
+\begin{algorithm}
     \caption{An example}
     \label{lst:time1}
     \begin{pythoncode}
@@ -41,7 +41,7 @@ numeric calculation. The NumPy arrays used here are generally optimized for bett
 performance than regular Python arrays or lists. Time a few different statements inside the
 timer calls.
 
-\begin{algorithm}[H]
+\begin{algorithm}
     \caption{An example}
     \label{lst:time2}
     \begin{pythoncode}
@@ -113,7 +113,15 @@ floating point numbers, the loop using truncation and the loop using rounding se
 measure how much longer it takes to do the various additional operations in the truncation
 and rounding case.
 
-\Answer
+\Answer We plot the time the algorithm uses per loop ($t$) versus the number of
+multiplications $n$ in Fig. \ref{fig:time_loop}. As you can see,
+they almost all grow linearly with increasing $n$. The only difference is their slopes.
+The standard floating point numbers multiplication is the fastest (and of course, the most
+accurate). The truncated algorithm is a little slower, at the cost of losing
+accuracy (compared to the rounded case). And the rounded algorithm is the slowest
+among the three. The reason could be it repeatedly decompose and recompose numbers.
+They all have almost constant slopes indicate that the time of each multiplication
+is not getting slower no matter the numbers are either large or small.
 
 \begin{figure}[H]
     \centering
@@ -123,3 +131,5 @@ and rounding case.
         truncation algorithm and rounding algorithm.}
     \label{fig:time_loop}
 \end{figure}
+
+\newpage
