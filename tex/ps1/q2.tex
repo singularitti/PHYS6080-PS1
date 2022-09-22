@@ -13,26 +13,26 @@ The statement is repeated \code{n} times to get the average time per call.
             setup = "import math"
             n = 10000000
             s = timeit.timeit(stmt='8967.4*15.4328', setup=setup, number=n)
-            print('Time per multiplication call is ', float(s) / n)
+            print('Time per multiplication call is:', float(s) / n)
             s = timeit.timeit(stmt='8967.4*15.4328+3567.2', setup=setup, number=n)
-            print('Time per multiplication plus add call is ', float(s) / n)
+            print('Time per multiplication plus add call is:', float(s) / n)
             s = timeit.timeit(stmt='8967.4/15432.8', setup=setup, number=n)
-            print('Time per division call is ', float(s) / n)
+            print('Time per division call is:', float(s) / n)
             s = timeit.timeit(stmt='math.cos(10)', setup=setup, number=n)
-            print('Time per cos call is ', float(s) / n)
+            print('Time per cos call is:', float(s) / n)
             s = timeit.timeit(stmt='math.log(10)', setup=setup, number=n)
-            print('Time per log call is ', float(s) / n)
+            print('Time per log call is:', float(s) / n)
     \end{pythoncode}
 \end{algorithm}
 
 And the output is:
 
-\begin{minted}[frame=lines,autogobble]{text}
-Time per multiplication call is  5.88912920000002e-09
-Time per multiplication plus add call is  4.166137500000033e-09
-Time per division call is  4.07354170000005e-09
-Time per cos call is  4.956927499999999e-08
-Time per log call is  5.931337919999997e-08
+\begin{minted}[frame=lines]{text}
+Time per multiplication call is: 5.673008299999971e-09
+Time per multiplication plus add call is: 4.112341599999958e-09
+Time per division call is: 4.108937500000032e-09
+Time per cos call is: 4.9459925000000027e-08
+Time per log call is: 6.079733750000003e-08
 \end{minted}
 
 Snippet \ref{lst:time2} uses two calls to the default timer to record the start and stop
@@ -51,20 +51,20 @@ timer calls.
                 a = np.random.rand(n)
                 b = np.random.rand(n)
             starttime = timeit.default_timer()
-            print("The start time is :", starttime)
+            print("The start time is:", starttime)
             c = a * np.log(b)
             dt = timeit.default_timer() - starttime
-            print("The time difference is :", dt)
-            print("The time per operation is :", dt / n)
+            print("The time difference is:", dt)
+            print("The time per operation is:", dt / n)
     \end{pythoncode}
 \end{algorithm}
 
 And the output is:
 
 \begin{minted}[frame=lines,autogobble]{text}
-    The start time is : 17.98673
-    The time difference is : 0.005920874999997494
-    The time per operation is : 5.920874999997494e-09
+The start time is: 17.98673
+The time difference is: 0.005920874999997494
+The time per operation is: 5.920874999997494e-09
 \end{minted}
 
 \Question How do the times here, using NumPy, compare with the times for single
@@ -87,21 +87,21 @@ If we change the NumPy arrays to normal Python lists, as shown in Snippet \ref{l
             a = a.tolist()
             b = b.tolist()
             starttime = timeit.default_timer()
-            print("The start time is :", starttime)
+            print("The start time is:", starttime)
             for i, j in zip(a, b):
                 i * math.log(j)
             dt = timeit.default_timer() - starttime
-            print("The time difference is :", dt)
-            print("The time per operation is :", dt / n)
+            print("The time difference is:", dt)
+            print("The time per operation is:", dt / n)
         \end{pythoncode}
 \end{algorithm}
 
 And the output is:
 
 \begin{minted}[frame=lines,autogobble]{text}
-    The start time is : 1229.515670041
-    The time difference is : 0.00022004199990988127
-    The time per operation is : 2.2004199990988126e-07
+    The start time is: 1229.515670041
+    The time difference is: 0.00022004199990988127
+    The time per operation is: 2.2004199990988126e-07
 \end{minted}
 
 As you can see, each operation is much slower. We could assume the operations is
