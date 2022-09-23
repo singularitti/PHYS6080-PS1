@@ -1,0 +1,25 @@
+using StaticArrays: StaticVector
+
+export Particle
+export distance, potential, force
+
+struct Particle
+    r::StaticVector{3,Float64}
+    v::StaticVector{3,Float64}
+end
+
+function distance(p1::Particle, p2::Particle)
+    @assert p1.r != p2.r "the two particles crashed!"
+    return sqrt(sum(abs2, p1.r - p2.r))
+end
+
+function potential(p1::Particle, p2::Particle)
+    r = distance(p1, p2)
+    η = (σ / r)^6
+    return 4ε * η * (η - 1)
+end
+
+function force(p1::Particle, p2::Particle)
+    η = 1 / distance(p1, p2)
+    return (p1.r - p2.r) * (η^14 - η^8)
+end
