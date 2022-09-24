@@ -6,6 +6,7 @@ export distance, potential, force
 mutable struct Particle
     r::MVector{3,Float64}
     v::MVector{3,Float64}
+    Particle() = new()  # Incomplete initialization
 end
 
 function distance(p1::Particle, p2::Particle)
