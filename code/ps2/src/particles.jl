@@ -1,11 +1,11 @@
-using StaticArrays: StaticVector
+using StaticArrays: MVector
 
 export Particle
 export distance, potential, force
 
-struct Particle
-    r::StaticVector{3,Float64}
-    v::StaticVector{3,Float64}
+mutable struct Particle
+    r::MVector{3,Float64}
+    v::MVector{3,Float64}
 end
 
 function distance(p1::Particle, p2::Particle)
