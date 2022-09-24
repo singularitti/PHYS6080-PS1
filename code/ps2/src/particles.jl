@@ -1,7 +1,7 @@
 using StaticArrays: MVector
 
 export Particle
-export distance, potential, force
+export distance, potential, force, distribute!
 
 mutable struct Particle
     r::MVector{3,Float64}
@@ -32,3 +32,13 @@ function force(particles, i)
     end
 end
 force(particles) = map(Base.Fix1(force, particles), eachindex(particles))
+
+function distribute!(particles, volume)
+    @assert length(particles) > 0
+    n, a = length(particles), cbrt(volume)
+    for (particle, coordinates) in zip(particles, eachcol(a * rand(3, n)))
+        particle.r = coordinates
+    end
+    @assert unique(particles) == particles
+    return particles
+end
