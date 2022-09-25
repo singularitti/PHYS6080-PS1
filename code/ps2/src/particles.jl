@@ -1,7 +1,7 @@
 using StaticArrays: MVector
 
 export Particle
-export distance, potential, force, distribute!, initialize!
+export distance, potential_energy, force, distribute!, initialize!
 
 mutable struct Particle
     r::MVector{3,Float64}
@@ -14,16 +14,16 @@ function distance(p1::Particle, p2::Particle)
     return sqrt(sum(abs2, p1.r - p2.r))
 end
 
-function potential(p1::Particle, p2::Particle)
+function potential_energy(p1::Particle, p2::Particle)
     r = distance(p1, p2)
     η = 1 / r^6
     return 4ε * η * (η - 1)
 end
-function potential(particles)
+function potential_energy(particles::Particles)
     total = 0
     for (i, particleᵢ) in enumerate(particles)
         for particleⱼ in particles[i:end]
-            total += potential(particleᵢ, particleⱼ)
+            total += potential_energy(particleᵢ, particleⱼ)
         end
     end
     return 2total
