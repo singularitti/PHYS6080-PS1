@@ -1,6 +1,6 @@
 export temperature
 
-function temperature(particles::Particles)
+function temperature(particles)
     velocities = map(particles) do particle
         particle.v
     end
