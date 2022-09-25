@@ -33,19 +33,26 @@ function potential_energy(particles)
 end
 
 function acceleration(particle::Particle)
-    function by(particle′::Particle)
+    return function (particle′::Particle)
         η = 1 / distance(particle, particle′)
         return (particle.r - particle′.r) * (η^14 - η^8)
     end
-    function by(particles)
-        @assert length(particles) > 1 "you must have more than 1 particle to calculate the force!"
-        if particle in particles
-            return by(filter(particle′ -> particle′ != particle, particles))
+end
+function acceleration(particles)
+    function on(i::Integer)
+        f = acceleration(particles[i])
+        return sum(map(f, getindex(particles, filter(!=(i), eachindex(particles)))))
+    end
+    function on(particle::Particle)
+        i = findfirst(==(particle), particles)
+        if isnothing(i)
+            sum(acceleration(particle), particles)
         else
-            return sum(by, particles)
+            return on(i)
         end
     end
-    return by
+    on() = map(on, eachindex(particles))
+    return on
 end
 
 function distribute!(particles, volume)
