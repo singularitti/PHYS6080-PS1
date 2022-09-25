@@ -1,4 +1,4 @@
-using StaticArrays: MVector
+using StaticArrays: SVector, MVector
 
 export Particle
 export distance, potential_energy, force, distribute!, initialize!
@@ -7,6 +7,10 @@ mutable struct Particle
     r::MVector{3,Float64}
     v::MVector{3,Float64}
     Particle() = new()  # Incomplete initialization
+end
+
+struct Particles{N}
+    data::SVector{N,Particle}
 end
 
 function distance(p1::Particle, p2::Particle)
@@ -62,3 +66,24 @@ function initialize!(particles)
     end
     return particles
 end
+
+# Similar to https://github.com/JuliaCollections/IterTools.jl/blob/0ecaa88/src/IterTools.jl#L1028-L1032
+function Base.iterate(iter::Particles, state=1)
+    if state > length(iter)
+        return nothing
+    else
+        return iter.data[state], state + 1
+    end
+end
+
+Base.eltype(::Particles) = Particle
+
+Base.length(iter::Particles) = length(iter.data)
+
+Base.IteratorSize(::Type{<:Particles}) = Base.HasLength()
+
+Base.getindex(iter::Particles, i...) = getindex(iter.data, i...)
+
+Base.firstindex(::Particles) = 1
+
+Base.lastindex(iter::Particles) = length(iter)
