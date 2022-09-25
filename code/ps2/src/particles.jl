@@ -50,8 +50,9 @@ acceleration(particles, i) = force(particles, i)
 acceleration(particles) = force(particles)
 
 function distribute!(particles, volume)
-    @assert length(particles) > 0
-    n, a = length(particles), cbrt(volume)
+    n = length(particles)
+    @assert n > 0
+    a = cbrt(volume)
     for (particle, coordinates) in zip(particles, eachcol(a * rand(3, n)))
         particle.r = coordinates
     end
