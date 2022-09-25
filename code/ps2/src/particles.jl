@@ -9,10 +9,6 @@ mutable struct Particle
     Particle() = new()  # Incomplete initialization
 end
 
-struct Particles{N}
-    data::SVector{N,Particle}
-end
-
 function distance(particle1::Particle, particle2::Particle)
     @assert particle1.r != particle2.r "the two particles crashed!"
     return sqrt(sum(abs2, particle1.r - particle2.r))
@@ -23,7 +19,7 @@ function potential_energy(particle1::Particle, particle2::Particle)
     η = 1 / r^6
     return 4ε * η * (η - 1)
 end
-function potential_energy(particles::Particles)
+function potential_energy(particles)
     total = 0
     for (i, particleᵢ) in enumerate(particles)
         for particleⱼ in particles[i:end]
@@ -67,24 +63,3 @@ function initialize!(particles)
     end
     return particles
 end
-
-# Similar to https://github.com/JuliaCollections/IterTools.jl/blob/0ecaa88/src/IterTools.jl#L1028-L1032
-function Base.iterate(iter::Particles, state=1)
-    if state > length(iter)
-        return nothing
-    else
-        return iter.data[state], state + 1
-    end
-end
-
-Base.eltype(::Particles) = Particle
-
-Base.length(iter::Particles) = length(iter.data)
-
-Base.IteratorSize(::Type{<:Particles}) = Base.HasLength()
-
-Base.getindex(iter::Particles, i...) = getindex(iter.data, i...)
-
-Base.firstindex(::Particles) = 1
-
-Base.lastindex(iter::Particles) = length(iter)
