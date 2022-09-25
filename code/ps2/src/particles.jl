@@ -13,12 +13,12 @@ mutable struct Particle
     Particle() = new()  # Incomplete initialization
 end
 
-function distance(particle1::Particle, particle2::Particle)
-    return sqrt(sum(abs2, particle1.r - particle2.r))
+function distance(particle::Particle, particle′::Particle)
+    return sqrt(sum(abs2, particle.r - particle′.r))
 end
 
-function potential_energy(particle1::Particle, particle2::Particle)
-    r = distance(particle1, particle2)
+function potential_energy(particle::Particle, particle′::Particle)
+    r = distance(particle, particle′)
     η = 1 / r^6
     return 4ε * η * (η - 1)
 end
