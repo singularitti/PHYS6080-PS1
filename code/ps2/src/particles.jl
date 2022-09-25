@@ -13,13 +13,13 @@ struct Particles{N}
     data::SVector{N,Particle}
 end
 
-function distance(p1::Particle, p2::Particle)
-    @assert p1.r != p2.r "the two particles crashed!"
-    return sqrt(sum(abs2, p1.r - p2.r))
+function distance(particle1::Particle, particle2::Particle)
+    @assert particle1.r != particle2.r "the two particles crashed!"
+    return sqrt(sum(abs2, particle1.r - particle2.r))
 end
 
-function potential_energy(p1::Particle, p2::Particle)
-    r = distance(p1, p2)
+function potential_energy(particle1::Particle, particle2::Particle)
+    r = distance(particle1, particle2)
     η = 1 / r^6
     return 4ε * η * (η - 1)
 end
