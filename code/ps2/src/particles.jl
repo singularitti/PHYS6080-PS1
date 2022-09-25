@@ -49,8 +49,8 @@ accelerationof(particles) = map(Base.Fix1(accelerationof, particles), eachindex(
 function distribute!(particles, volume)
     n = length(particles)
     @assert n > 0
-    a = cbrt(volume)
-    for (particle, coordinates) in zip(particles, eachcol(a * rand(3, n)))
+    L = cbrt(volume)
+    for (particle, coordinates) in zip(particles, eachcol(L * rand(3, n)))
         particle.r = coordinates
     end
     @assert unique(particles) == particles
