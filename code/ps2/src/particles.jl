@@ -10,7 +10,6 @@ mutable struct Particle
 end
 
 function distance(particle1::Particle, particle2::Particle)
-    @assert particle1.r != particle2.r "the two particles crashed!"
     return sqrt(sum(abs2, particle1.r - particle2.r))
 end
 
