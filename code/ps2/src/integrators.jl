@@ -14,7 +14,7 @@ function take_one_step!(particles, i, Δt, ::VelocityVerlet)
 end
 function take_one_step!(particles, Δt, ::VelocityVerlet)
     for i in eachindex(particles)
-        take_one_step!(particles, i, Δt, ::VelocityVerlet)
+        take_one_step!(particles, i, Δt, VelocityVerlet())
     end
     return particles
 end
