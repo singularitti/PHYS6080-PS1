@@ -28,21 +28,31 @@ function potential_energy(particles)
     return 2total
 end
 
-function force(p1::Particle, p2::Particle)
-    η = 1 / distance(p1, p2)
-    return (p1.r - p2.r) * (η^14 - η^8)
+struct Acceleration
+    particle::Particle
 end
-function force(particles, i)
+function (𝐚::Acceleration)(particle2::Particle)
+    particle1 = 𝐚.particle
+    η = 1 / distance(particle1, particle2)
+    if distance(particle1, particle2) == 0
+        return zeros(MVector{3,Float64})
+    end
+    return (particle1.r - particle2.r) * (η^14 - η^8)
+end
+function (𝐚::Acceleration)(particles)
     @assert length(particles) > 1 "you must have more than 1 particle to calculate the force!"
-    particleᵢ = particles[i]
-    return sum(enumerate(particles)) do (j, particleⱼ)
-        j != i ? force(particleᵢ, particleⱼ) : zeros(MVector{3,Float64})
+    @assert 𝐚.particle ∉ particles
+    return sum(𝐚, particles)
+end
+
+acceleration(particle::Particle) = Acceleration(particle)
+function acceleration(particles)
+    return map(eachindex(particles)) do i
+        sum(
+            acceleration(particles[i])(particles[filter(j -> j != i, eachindex(particles))])
+        )
     end
 end
-force(particles) = sum(map(Base.Fix1(force, particles), eachindex(particles)))
-
-acceleration(particles, i) = force(particles, i)
-acceleration(particles) = force(particles)
 
 function distribute!(particles, volume)
     n = length(particles)
