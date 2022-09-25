@@ -44,7 +44,7 @@ function force(particles, i)
         j != i ? force(particleᵢ, particleⱼ) : zeros(MVector{3,Float64})
     end
 end
-force(particles) = map(Base.Fix1(force, particles), eachindex(particles))
+force(particles) = sum(map(Base.Fix1(force, particles), eachindex(particles)))
 
 acceleration(particles, i) = force(particles, i)
 acceleration(particles) = force(particles)
