@@ -1,5 +1,5 @@
 export VelocityVerlet
-export take_one_step!, take_n_step!
+export take_one_step!, take_n_steps!, velocities, positions
 
 abstract type Integrator end
 struct VelocityVerlet <: Integrator end
@@ -29,4 +29,16 @@ function take_n_steps!(particles, n, Δt, ::VelocityVerlet)
         data[:, i] = take_one_step!(particles, Δt, VelocityVerlet())
     end
     return StepTracker(data)
+end
+
+function velocities(tracker::StepTracker)
+    return map(tracker.data) do particle
+        particle.v
+    end
+end
+
+function positions(tracker::StepTracker)
+    return map(tracker.data) do particle
+        particle.r
+    end
 end
