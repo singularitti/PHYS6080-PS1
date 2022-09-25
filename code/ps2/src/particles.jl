@@ -19,6 +19,15 @@ function potential(p1::Particle, p2::Particle)
     η = 1 / r^6
     return 4ε * η * (η - 1)
 end
+function potential(particles)
+    total = 0
+    for (i, particleᵢ) in enumerate(particles)
+        for particleⱼ in particles[i:end]
+            total += potential(particleᵢ, particleⱼ)
+        end
+    end
+    return 2total
+end
 
 function acceleration(p1::Particle, p2::Particle)
     η = 1 / distance(p1, p2)
