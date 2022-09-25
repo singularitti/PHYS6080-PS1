@@ -1,7 +1,7 @@
 using StaticArrays: SVector, MVector
 
 export Particle
-export distance, potential_energy, acceleration, distribute!, initialize!
+export distance, potential_energy, acceleration, accelerationof, distribute!, initialize!
 
 const ε = 120
 const σ = 0.34
@@ -38,22 +38,13 @@ function acceleration(particle::Particle)
         return (particle.r - particle′.r) * (η^14 - η^8)
     end
 end
-function acceleration(particles)
-    function on(i::Integer)
-        f = acceleration(particles[i])
-        return sum(map(f, getindex(particles, filter(!=(i), eachindex(particles)))))
+
+function accelerationof(particles, i)
+    return sum(filter(!=(i), eachindex(particles))) do j
+        acceleration(particles[i])(particles[j])
     end
-    function on(particle::Particle)
-        i = findfirst(==(particle), particles)
-        if isnothing(i)
-            sum(acceleration(particle), particles)
-        else
-            return on(i)
-        end
-    end
-    on() = map(on, eachindex(particles))
-    return on
 end
+accelerationof(particles) = map(Base.Fix1(accelerationof, particles), eachindex(particles))
 
 function distribute!(particles, volume)
     n = length(particles)
