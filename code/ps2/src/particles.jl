@@ -38,9 +38,6 @@ end
 function (𝐚::Acceleration)(particle2::Particle)
     particle1 = 𝐚.particle
     η = 1 / distance(particle1, particle2)
-    if distance(particle1, particle2) == 0
-        return zeros(MVector{3,Float64})
-    end
     return (particle1.r - particle2.r) * (η^14 - η^8)
 end
 function (𝐚::Acceleration)(particles)
