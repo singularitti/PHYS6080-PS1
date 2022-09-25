@@ -1,7 +1,7 @@
 using StaticArrays: MVector
 
 export Particle
-export distance, potential, acceleration, distribute!, initialize!
+export distance, potential, force, distribute!, initialize!
 
 mutable struct Particle
     r::MVector{3,Float64}
@@ -29,18 +29,21 @@ function potential(particles)
     return 2total
 end
 
-function acceleration(p1::Particle, p2::Particle)
+function force(p1::Particle, p2::Particle)
     η = 1 / distance(p1, p2)
     return (p1.r - p2.r) * (η^14 - η^8)
 end
-function acceleration(particles, i)
+function force(particles, i)
     @assert length(particles) > 1 "you must have more than 1 particle to calculate the force!"
     particleᵢ = particles[i]
     return sum(enumerate(particles)) do (j, particleⱼ)
-        j != i ? acceleration(particleᵢ, particleⱼ) : zeros(MVector{3,Float64})
+        j != i ? force(particleᵢ, particleⱼ) : zeros(MVector{3,Float64})
     end
 end
-acceleration(particles) = map(Base.Fix1(acceleration, particles), eachindex(particles))
+force(particles) = map(Base.Fix1(force, particles), eachindex(particles))
+
+acceleration(particles, i) = force(particles, i)
+acceleration(particles) = force(particles)
 
 function distribute!(particles, volume)
     @assert length(particles) > 0
