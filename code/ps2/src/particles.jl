@@ -1,7 +1,11 @@
 using StaticArrays: SVector, MVector
 
 export Particle
-export distance, potential_energy, force, distribute!, initialize!
+export distance, potential_energy, acceleration, distribute!, initialize!
+
+const ε = 120
+const σ = 0.34
+const ρ = 0.75
 
 mutable struct Particle
     r::MVector{3,Float64}
