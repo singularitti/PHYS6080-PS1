@@ -5,6 +5,7 @@ const σ = 0.34
 const ρ = 0.75
 
 include("particles.jl")
+include("integrators.jl")
 include("thermal.jl")
 
 end
