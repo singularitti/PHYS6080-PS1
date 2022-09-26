@@ -58,11 +58,9 @@ function accelerationof(particles, i)
 end
 accelerationof(particles) = map(Base.Fix1(accelerationof, particles), eachindex(particles))
 
-function distribute!(particles)
-    n = length(particles)
-    @assert n > 0
+function reset_positions!(particles)
     L = boxsize(particles)
-    for (particle, coordinates) in zip(particles, eachcol(L * rand(3, n)))
+    for (particle, coordinates) in zip(particles, eachcol(L * rand(3, length(particles))))
         particle.r = coordinates
     end
     @assert unique(particles) == particles
