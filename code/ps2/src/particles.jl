@@ -46,10 +46,10 @@ function accelerationof(particles, i)
 end
 accelerationof(particles) = map(Base.Fix1(accelerationof, particles), eachindex(particles))
 
-function distribute!(particles, volume)
+function distribute!(particles)
     n = length(particles)
     @assert n > 0
-    L = cbrt(volume)
+    L = boxsize(particles)
     for (particle, coordinates) in zip(particles, eachcol(L * rand(3, n)))
         particle.r = coordinates
     end
