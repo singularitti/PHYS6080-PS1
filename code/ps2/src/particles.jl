@@ -59,6 +59,7 @@ end
 
 function initialize!(particles)
     @assert length(particles) > 0
+    distribute!(particles)
     for particle in particles
         particle.v = zeros(MVector{3,Float64})
     end
