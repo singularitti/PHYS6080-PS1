@@ -67,12 +67,17 @@ function reset_positions!(particles)
     return particles
 end
 
-function initialize!(particles)
-    @assert length(particles) > 0
-    distribute!(particles)
+function reset_velocities!(particles)
     for particle in particles
         particle.v = zeros(MVector{3,Float64})
     end
+    return particles
+end
+
+function reset!(particles)
+    @assert length(particles) > 0
+    reset_positions!(particles)
+    reset_velocities!(particles)
     return particles
 end
 
