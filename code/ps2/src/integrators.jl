@@ -1,11 +1,17 @@
 export VelocityVerlet
-export take_one_step!, take_n_steps!, velocities, positions
+export damp!, take_one_step!, take_n_steps!, velocities, positions
 
 abstract type Integrator end
 struct VelocityVerlet <: Integrator end
 
 struct StepTracker
     data::Matrix{Particle}
+end
+
+function damp!(particles, n, Δt)
+    take_n_steps!(particles, n, Δt, VelocityVerlet())
+    reset_velocities!(particles)
+    return particles
 end
 
 apply_periodic_bc(x, L) = x < 0 || x > L ? mod(x, L) : x
