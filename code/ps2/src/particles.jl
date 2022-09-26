@@ -19,17 +19,13 @@ end
 
 function potential_energy(particle::Particle, particle′::Particle)
     r = distance(particle, particle′)
-    if iszero(r)
-        return 0
-    else
-        η = 1 / r^6
-        return 4ε * η * (η - 1)
-    end
+    η = 1 / r^6
+    return 4ε * η * (η - 1)
 end
 function potential_energy(particles)
     total = 0
-    for (i, particleᵢ) in enumerate(particles)
-        for particleⱼ in particles[i:end]
+    for (i, particleᵢ) in enumerate(particles[begin:(end - 1)])
+        for particleⱼ in particles[(i + 1):end]
             total += potential_energy(particleᵢ, particleⱼ)
         end
     end
