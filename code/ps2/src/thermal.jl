@@ -1,11 +1,10 @@
 export temperature
 
 function temperature(particles)
-    velocities = map(particles) do particle
-        particle.v
+    v² = map(particles) do particle
+        sum(abs2, particle.v)
     end
-    n = length(particles)
-    return 16 / n * sum(abs2, velocities)
+    return 16 / length(particles) * sum(v²)
 end
 
 volume(particles) = length(particles) / ρ
