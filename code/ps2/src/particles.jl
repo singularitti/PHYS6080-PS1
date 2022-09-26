@@ -58,6 +58,13 @@ function accelerationof(particles, i)
 end
 accelerationof(particles) = map(Base.Fix1(accelerationof, particles), eachindex(particles))
 
+function rescale_velocities!(particles, f)
+    for particle in particles
+        particle.v *= f
+    end
+    return particles
+end
+
 function reset_positions!(particles)
     L = boxsize(particles)
     for (particle, coordinates) in zip(particles, eachcol(L * rand(3, length(particles))))
