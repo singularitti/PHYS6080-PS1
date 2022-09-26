@@ -1,7 +1,14 @@
 using StaticArrays: SVector, MVector
 
 export Particle
-export distance, potential_energy, acceleration, accelerationof, distribute!, initialize!
+export distance,
+    potential_energy,
+    kinetic_energy,
+    total_energy,
+    acceleration,
+    accelerationof,
+    distribute!,
+    initialize!
 
 const ε = 120
 const σ = 0.34
@@ -31,6 +38,11 @@ function potential_energy(particles)
     end
     return 2total
 end
+
+kinetic_energy(particle::Particle) = 24ε * sum(abs2, particle.v)
+kinetic_energy(particles) = sum(kinetic_energy, particles)
+
+total_energy(particles) = kinetic_energy(particles) + potential_energy(particles)
 
 function acceleration(particle::Particle)
     return function (particle′::Particle)
