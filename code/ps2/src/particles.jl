@@ -7,8 +7,10 @@ export distance,
     total_energy,
     acceleration,
     accelerationof,
-    distribute!,
-    initialize!
+    rescale_velocities!,
+    reset_velocities!,
+    reset_positions!,
+    reset!
 
 const ε = 120
 const σ = 0.34
