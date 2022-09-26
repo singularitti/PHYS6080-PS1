@@ -29,7 +29,8 @@ end
 function take_n_steps!(particles, n, Δt, ::VelocityVerlet)
     data = Matrix{Particle}(undef, length(particles), n)
     for i in 1:n
-        data[:, i] = take_one_step!(particles, Δt, VelocityVerlet())
+        # Must use `deepcopy`!
+        data[:, i] = deepcopy(take_one_step!(particles, Δt, VelocityVerlet()))
     end
     return StepTracker(data)
 end
