@@ -19,8 +19,12 @@ end
 
 function potential_energy(particle::Particle, particle′::Particle)
     r = distance(particle, particle′)
-    η = 1 / r^6
-    return 4ε * η * (η - 1)
+    if iszero(r)
+        return 0
+    else
+        η = 1 / r^6
+        return 4ε * η * (η - 1)
+    end
 end
 function potential_energy(particles)
     total = 0
