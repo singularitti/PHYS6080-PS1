@@ -64,3 +64,5 @@ function initialize!(particles)
     end
     return particles
 end
+
+boxsize(particles) = cbrt(length(particles) / ρ)
