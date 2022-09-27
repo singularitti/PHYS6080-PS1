@@ -38,7 +38,7 @@ function potential_energy(particles)
             total += potential_energy(particleᵢ, particleⱼ)
         end
     end
-    return 2total
+    return total
 end
 
 kinetic_energy(particle::Particle) = 24ε * sum(abs2, particle.v)
