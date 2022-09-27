@@ -12,7 +12,6 @@ export distance,
     reset_positions!,
     reset!
 
-const ε = 120
 const ρ = 0.75
 
 mutable struct Particle
@@ -28,7 +27,7 @@ end
 function potential_energy(particle::Particle, particle′::Particle)
     r = distance(particle, particle′)
     η = 1 / r^6
-    return 4ε * η * (η - 1)
+    return 4η * (η - 1)
 end
 function potential_energy(particles)
     total = 0
@@ -40,7 +39,7 @@ function potential_energy(particles)
     return total
 end
 
-kinetic_energy(particle::Particle) = 24ε * sum(abs2, particle.v)
+kinetic_energy(particle::Particle) = 24 * sum(abs2, particle.v)
 kinetic_energy(particles) = sum(kinetic_energy, particles)
 
 total_energy(particles) = kinetic_energy(particles) + potential_energy(particles)
