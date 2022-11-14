@@ -1,4 +1,4 @@
-# PHYS6080
+# PHYS6080 PS1
 
 This repository stores the homework I did when I was taking this class
 in the fall semester of 2022 at Columbia University.
