@@ -5,7 +5,7 @@ in the fall semester of 2022 at Columbia University.
 
 ## How to run the code
 
-For example, go to directory `code/ps1`, and run `python`
+For example, go to directory `code`, and run `python`
 or `ipython` from that directory. Import functions and other modules just as I did
 in `problem1/plotting.py`:
 
