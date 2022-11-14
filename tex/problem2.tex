@@ -72,7 +72,7 @@ statements using \code{timeit}?
 
 \Answer The operations in Snippet \ref{lst:time2} is basically at the same magnitude as
 in Snippet \ref{lst:time1}. It is as if the whole operations are just applied to
-on element. That means these NumPy operations are of $\mathcal{O}(1)$ complexity.
+on element. That means these NumPy operations are of \(\mathcal{O}(1)\) complexity.
 NumPy probably runs these operations in parallel.
 If we change the NumPy arrays to normal Python lists, as shown in Snippet \ref{lst:time3}:
 
@@ -105,7 +105,7 @@ And the output is:
 \end{minted}
 
 As you can see, each operation is much slower. We could assume the operations is
-of $\mathcal{O}(N)$ complexity.
+of \(\mathcal{O}(N)\) complexity.
 
 \Question Now use the \code{timeit.default_timer()} calls to time the loop over random number
 multiplications in Problem \ref{sec:p1}. Time the multiplication loop using standard
@@ -113,9 +113,9 @@ floating point numbers, the loop using truncation and the loop using rounding se
 measure how much longer it takes to do the various additional operations in the truncation
 and rounding case.
 
-\Answer We plot the time the algorithm uses per loop ($t$) versus the number of
-multiplications $n$ in Fig. \ref{fig:time_loop}. As you can see,
-they almost all grow linearly with increasing $n$. The only difference is their slopes.
+\Answer We plot the time the algorithm uses per loop (\(t\)) versus the number of
+multiplications \(n\) in Fig. \ref{fig:time_loop}. As you can see,
+they almost all grow linearly with increasing \(n\). The only difference is their slopes.
 The standard floating point numbers multiplication is the fastest (and of course, the most
 accurate). The truncated algorithm is a little slower, at the cost of losing
 accuracy (compared to the rounded case). And the rounded algorithm is the slowest
@@ -126,7 +126,7 @@ is not getting slower no matter the number is either large or small.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{p2_q3}
-    \caption{Time per loop $t$ as a function of number of multiplications $n$ of
+    \caption{Time per loop \(t\) as a function of number of multiplications \(n\) of
         the multiplication loops using standard floating point numbers,
         truncation algorithm and rounding algorithm.}
     \label{fig:time_loop}

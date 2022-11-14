@@ -1,12 +1,12 @@
 \section{Problem \thesection}
 
 Here you are to investigate back recursion to determine the modified Bessel function
-$I_n(x)$.
+\(I_n(x)\).
 
-\Question Write a program using back recursion to calculate $I_n(x)$.
+\Question Write a program using back recursion to calculate \(I_n(x)\).
 Their values can be compared with the values determined by SciPy.
-For $x$ in the range $1$ to $10$, how many back recursion steps are needed to
-determine $I_0(x)$ to $I_5(x)$ to $6$ decimal places of accuracy?
+For \(x\) in the range \(1\) to \(10\), how many back recursion steps are needed to
+determine \(I_0(x)\) to \(I_5(x)\) to \(6\) decimal places of accuracy?
 
 \Answer First, we need to write a little program for the modified Bessel functions.
 Since the \emph{normalizer} is
@@ -17,7 +17,7 @@ Since the \emph{normalizer} is
 %
 we need to write a little code, as shown in Snippet \ref{lst:normalize}.
 The \code{coeff} function calculates each coefficient of the
-modified Bessel functions: $\bm{c} = \irow{1 & 0 & -2 & 0 & 2 & -2 & 0 & 2 & \ldots}$.
+modified Bessel functions: \(\bm{c} = \irow{1 & 0 & -2 & 0 & 2 & -2 & 0 & 2 & \ldots}\).
 And in function \code{normalize} we divide each order of the modified Bessel function
 by a scaling factor, which is determined by the normalizer \eqref{eq:normalize}.
 
@@ -46,11 +46,11 @@ by a scaling factor, which is determined by the normalizer \eqref{eq:normalize}.
 Now we can write our back recursion algorithm, as shown in Snippet \ref{lst:back_recursion}.
 In function \code{back_recursion}, we first initialize an empty vector \code{I} which
 will store the values of the modified Bessel functions of each order up to
-\code{max_order} (denoted as $N$, where $N \geq 2$) at $x$, i.e., $I_n(x)$, where
-$n = 0, 1, \ldots, N$.
+\code{max_order} (denoted as \(N\), where \(N \geq 2\)) at \(x\), i.e., \(I_n(x)\), where
+\(n = 0, 1, \ldots, N\).
 Then we set the last two values of \code{I} to be anything we want, i.e.,
-$I_{N-1}(x) = 1$ and $I_N(x) = 0$ here,
-since $I_n(x)$ at fixed $x$ decreases with increasing $n$.
+\(I_{N-1}(x) = 1\) and \(I_N(x) = 0\) here,
+since \(I_n(x)\) at fixed \(x\) decreases with increasing \(n\).
 And we work back to the first order using the recurrence relation:
 %
 \begin{equation}
@@ -75,30 +75,30 @@ At last, we normalize the series with normalizer \eqref{eq:normalize}.
 
 Before we go further, let us have a look at the properties of the modified Bessel
 functions. First, we can see from Fig. \ref{fig:bessel} that,
-$I_n(x)$ increases exponentially with increasing $x$.
-And at fixed $x$, with increasing order $n$, $I_n(x)$ decreases drastically as well.
+\(I_n(x)\) increases exponentially with increasing \(x\).
+And at fixed \(x\), with increasing order \(n\), \(I_n(x)\) decreases drastically as well.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{p3_q1_1}
-    \caption{The modified Bessel function of the first kind $I_n(x)$ with
-        up to $10$th order at $x$ from $1$ to $10$.}
+    \caption{The modified Bessel function of the first kind \(I_n(x)\) with
+        up to \(10\)th order at \(x\) from \(1\) to \(10\).}
     \label{fig:bessel}
 \end{figure}
 
 Then it is natural to assume that our naïve back recursion algorithm will have larger
-errors with increasing $x$ and decreasing $n$. Because that is where tiny numerical
+errors with increasing \(x\) and decreasing \(n\). Because that is where tiny numerical
 errors in previous steps would result in large deviations in later steps.
 So, we could presume that:
 \begin{theorem}\label{thm:I_n_x}
-    If a starting order $N$ satisfies the following condition:
-    for $x = 10$, the back-recurred $I_0(x)$ to $I_5(x)$ are all within $6$ decimal
-    places of accuracy. Then $N$ will also satisfy the conditions for all $x$ from $1 - 9$.
+    If a starting order \(N\) satisfies the following condition:
+    for \(x = 10\), the back-recurred \(I_0(x)\) to \(I_5(x)\) are all within \(6\) decimal
+    places of accuracy. Then \(N\) will also satisfy the conditions for all \(x\) from \(1 - 9\).
 \end{theorem}
 
 \begin{algorithm}
     \caption{Calculate the difference between our naïve algorithm and the exact values, and find the
-        minimal steps required to make $I_0(x)$ to $I_5(x)$ converge.}
+        minimal steps required to make \(I_0(x)\) to \(I_5(x)\) converge.}
     \label{lst:find_n}
     \begin{pythoncode}
         NDIGITS = 6
@@ -126,21 +126,21 @@ In Snippet \ref{lst:find_n}, we implement an algorithm that can find the minimum
 needed for us to satisfy the desired criterion.
 Here, the constant \code{NDIGITS} specifies how many decimal places are desired.
 In function \code{errors}, we compare
-our $I_n(x)$ with the SciPy-calculated results at a certain $x = x_0$ and starting order $N$.
+our \(I_n(x)\) with the SciPy-calculated results at a certain \(x = x_0\) and starting order \(N\).
 By plotting the back recursion figures, we could find that usually, the error goes up
-as $n$ decreases from $N$ to $0$ since that is how the numerical errors accumulate.
-So the maximal deviation from the exact value is often achieved at $n = 0$, as shown in Fig. \ref{fig:plot_raw}
+as \(n\) decreases from \(N\) to \(0\) since that is how the numerical errors accumulate.
+So the maximal deviation from the exact value is often achieved at \(n = 0\), as shown in Fig. \ref{fig:plot_raw}
 and \ref{fig:I_n_10}. However, the statement ``the maximal deviation from the exact value
-is achieved at $n = 0$'' is not always true for some small values of $x$. For example,
-in Fig. \ref{fig:I_n_3}, we can see the maximal error happens at $n = 11$, which is an
+is achieved at \(n = 0\)'' is not always true for some small values of \(x\). For example,
+in Fig. \ref{fig:I_n_3}, we can see the maximal error happens at \(n = 11\), which is an
 interesting fluctuation that may be caused by numerical inaccuracy. However, this phenomenon
 will not change the correctness of Argument \ref{thm:I_n_x}.
 
 \begin{figure}
-	\centering
-	\includegraphics[width=0.8\linewidth]{p3_q1_2}
-	\caption{Numerical and ``exact'' values of $I_n(x)$ calculated at $x = 10$ and $N = 15$.}
-	\label{fig:plot_raw}
+    \centering
+    \includegraphics[width=0.8\linewidth]{p3_q1_2}
+    \caption{Numerical and ``exact'' values of \(I_n(x)\) calculated at \(x = 10\) and \(N = 15\).}
+    \label{fig:plot_raw}
 \end{figure}
 
 \begin{figure} % 2 independent side-by-side figures
@@ -148,8 +148,8 @@ will not change the correctness of Argument \ref{thm:I_n_x}.
     \begin{minipage}[t]{0.8\linewidth}
         \centering
         \includegraphics[width=\linewidth]{p3_q1_3}
-        \caption{The differences between the exact value of $I_n(10)$ and those calculated by
-            our naïve back recursion algorithm, where the starting order $N = 15$.}
+        \caption{The differences between the exact value of \(I_n(10)\) and those calculated by
+            our naïve back recursion algorithm, where the starting order \(N = 15\).}
         \label{fig:I_n_10}
     \end{minipage}
     \hfil
@@ -157,41 +157,41 @@ will not change the correctness of Argument \ref{thm:I_n_x}.
         \centering
         \includegraphics[width=\linewidth]{p3_1_11}
         \caption{An interesting behavior where the maximal accumulated error happens at
-            $n = 11$ when $x$ is small ($x = 3$ here).}
+            \(n = 11\) when \(x\) is small (\(x = 3\) here).}
         \label{fig:I_n_3}
     \end{minipage}
 \end{figure}
 
 We also write a function \code{plot_errors_x} to
-plot errors $\Delta = I_n(10) - I_{n,\textnormal{exact}}(10)$ for each
-back recursion starting order $N = 6 - 32$, as shown in Fig. \ref{fig:plot_errors_10}.
-Redder scatters denote for larger $N$, and greener scatters denote
-smaller $N$. As you can see, for small $N$'s, their deviations from exact values are huge.
+plot errors \(\Delta = I_n(10) - I_{n,\textnormal{exact}}(10)\) for each
+back recursion starting order \(N = 6 - 32\), as shown in Fig. \ref{fig:plot_errors_10}.
+Redder scatters denote for larger \(N\), and greener scatters denote
+smaller \(N\). As you can see, for small \(N\)'s, their deviations from exact values are huge.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{p3_q1_4}
-    \caption{Numerical errors $\Delta = I_n(10) - I_{n,\textnormal{exact}}(10)$
-        for all $N$ from $6$ to $32$.}
+    \caption{Numerical errors \(\Delta = I_n(10) - I_{n,\textnormal{exact}}(10)\)
+        for all \(N\) from \(6\) to \(32\).}
     \label{fig:plot_errors_10}
 \end{figure}
 
 Finally, we will answer the question. See Snippet \ref{lst:find_n},
 in function \code{max_errors}, we apply this algorithm to a matrix spanned by
-$x = 1 \to 10$ and $n = 5 \to 39$.
-And function \code{minimum_steps} is used to filter out the first $N$ which uniformly
-satisfy the desired criterion for all $x = 1 - 10$.
+\(x = 1 \to 10\) and \(n = 5 \to 39\).
+And function \code{minimum_steps} is used to filter out the first \(N\) which uniformly
+satisfy the desired criterion for all \(x = 1 - 10\).
 Thus, for
 %
 \begin{equation}
     \sup_{x \in [1, 10]} \lvert I_N(x) - I_{N,\textnormal{exact}}(x) \rvert < 10^{-6},
 \end{equation}
 %
-the minimal $N$ required is $29$.
-To be more intuitive, we have also plotted $I_n(x)$ calculated by back recursion
-in a matrix of figures ($x = 1 - 10$, and $n = 5 - 35$) and made them into some GIF files.
+the minimal \(N\) required is \(29\).
+To be more intuitive, we have also plotted \(I_n(x)\) calculated by back recursion
+in a matrix of figures (\(x = 1 - 10\), and \(n = 5 - 35\)) and made them into some GIF files.
 This can be achieved by invoking the \code{save_plots_gif} function, as shown in
-Snippet \ref{lst:gif}. From these figures we can see that $29$ is an appropriate number.
+Snippet \ref{lst:gif}. From these figures we can see that \(29\) is an appropriate number.
 
 \begin{algorithm}[H]
     \caption{Save the differences to a series of GIF files.}
@@ -215,14 +215,14 @@ Snippet \ref{lst:gif}. From these figures we can see that $29$ is an appropriate
 
 \Question This code also uses the \code{Decimal} module to allow you to do back recursion to many
 decimal places of accuracy. Suppose for some reason you need the modified Bessel functions
-$I_0(x)$ to $I_5(x)$ accurate to $24$ decimal places for $x$ in the range $1$ to $10$. How
+\(I_0(x)\) to \(I_5(x)\) accurate to \(24\) decimal places for \(x\) in the range \(1\) to \(10\). How
 many back recursion steps do you need to achieve this?
 
-\Answer To achieve $24$ decimal places accuracy, the default SciPy \code{special.iv}
-is not enough to solve this problem since it uses $64$-bit floating point numbers
-and thus only have $15$ digits of accuracy.
+\Answer To achieve \(24\) decimal places accuracy, the default SciPy \code{special.iv}
+is not enough to solve this problem since it uses \(64\)-bit floating point numbers
+and thus only have \(15\) digits of accuracy.
 So we should write another high-precision back recursion algorithm to represent the exact
-values of $I_n(x)$.
+values of \(I_n(x)\).
 
 So we need to modify our \code{back_recursion} function a little, as shown in Snippet
 \ref{lst:back_recursion_precise}. Different from function \code{back_recursion}
@@ -271,30 +271,30 @@ to let it adapt more decimal places, as shown in Snippet \ref{lst:new_errors}.
         xs = range(10, 11)
         ns = range(15000, 15100, 1)
         n = find_minimum_order(xs, ns, Decimal(1) / 10**24)
-        \end{pythoncode}
+    \end{pythoncode}
 \end{algorithm}
 
-If \code{NDIGITS} is smaller than $15$, then using function \code{back_recursion} and
-\code{special.iv} is enough to calculate the rough and exact values of $I_n(x)$. So the
+If \code{NDIGITS} is smaller than \(15\), then using function \code{back_recursion} and
+\code{special.iv} is enough to calculate the rough and exact values of \(I_n(x)\). So the
 \code{errors} function falls back to the one we defined in Snippet \ref{lst:find_n}. On the
-other hand, If it is larger than $15$, then we calculate both the rough and exact values of
-$I_n(x)$ using \code{back_recursion_precise}, only with the exact value (\code{I_exact}) to
-be a certain amount ($m$) more recurrence steps than the rough one (\code{I}). Here, we
-choose $m = 100$.
+other hand, If it is larger than \(15\), then we calculate both the rough and exact values of
+\(I_n(x)\) using \code{back_recursion_precise}, only with the exact value (\code{I_exact}) to
+be a certain amount (\(m\)) more recurrence steps than the rough one (\code{I}). Here, we
+choose \(m = 100\).
 And the rest of the steps are the same as what we did in Question 1.
 
-However, after scanning $N$ for a very large range ($10 - 20000$), I found that this
-algorithm is very difficult to converge below $10^{-24}$, especially when $x = 10$.
-As we know from the previous question, $I_0(10) \approx 2815.7166284662544$. So it is
-very hard to let its deviation to be as small as $10^{-24}$. The best result we
-could achieve is when $N = 15009$, and
+However, after scanning \(N\) for a very large range (\(10 - 20000\)), I found that this
+algorithm is very difficult to converge below \(10^{-24}\), especially when \(x = 10\).
+As we know from the previous question, \(I_0(10) \approx 2815.7166284662544\). So it is
+very hard to let its deviation to be as small as \(10^{-24}\). The best result we
+could achieve is when \(N = 15009\), and
 %
 \begin{equation}
     \sup_{x \in [1, 10]} \lvert I_{N}(x) - I_{N+100}(x) \rvert < 10^{-21}.
 \end{equation}
 %
-After $N = 20000$, our computer will throw an overflow error. So we could not
-arrive at the exact $N$ for our algorithm accurate to $24$ decimal places.
-We have considered changing $m$ from $10$ to $1000$, but the result is still
+After \(N = 20000\), our computer will throw an overflow error. So we could not
+arrive at the exact \(N\) for our algorithm accurate to \(24\) decimal places.
+We have considered changing \(m\) from \(10\) to \(1000\), but the result is still
 the same.
 
