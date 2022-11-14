@@ -20,7 +20,7 @@ plt.rcParams.update(params)
 
 
 def plotsdir():
-    path = abspath(join(dirname(__file__), "..", "..", "tex", "ps1", "plots"))
+    path = abspath(join(dirname(__file__), "..", "..", "tex", "plots"))
     if not exists(path):
         os.makedirs(path)
     return path
